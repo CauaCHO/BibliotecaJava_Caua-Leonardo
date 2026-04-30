@@ -13,7 +13,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="livros">📚 Biblioteca Web</a>
+        <a class="navbar-brand fw-bold" href="livros">📚 Biblioteca Web UNIFEF</a>
     </div>
 </nav>
 
