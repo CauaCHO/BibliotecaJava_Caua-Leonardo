@@ -10,96 +10,122 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDate;
 
-@WebServlet("/livros")
+@WebServlet(urlPatterns = {"/livros", "/livros/novo", "/livros/salvar", "/livros/editar", "/livros/excluir"})
 public class LivroServlet extends HttpServlet {
+
     private final LivroDAO livroDAO = new LivroDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String acao = request.getParameter("acao");
-        if (acao == null) acao = "listar";
+        String caminho = request.getServletPath();
 
         try {
-            switch (acao) {
-                case "novo":
-                    request.getRequestDispatcher("livro-form.jsp").forward(request, response);
+            switch (caminho) {
+                case "/livros/novo":
+                    abrirFormulario(request, response, new Livro());
                     break;
-                case "editar":
+                case "/livros/editar":
                     editar(request, response);
                     break;
-                case "excluir":
+                case "/livros/excluir":
                     excluir(request, response);
                     break;
+                case "/livros":
                 default:
                     listar(request, response);
                     break;
             }
         } catch (Exception e) {
-            request.setAttribute("erro", e.getMessage());
-            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            tratarErro(request, response, e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String acao = request.getParameter("acao");
 
         try {
-            if ("atualizar".equals(acao)) {
-                atualizar(request, response);
-            } else {
-                inserir(request, response);
-            }
+            salvar(request, response);
         } catch (Exception e) {
-            request.setAttribute("erro", e.getMessage());
-            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            tratarErro(request, response, e);
         }
     }
 
-    private void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<Livro> livros = livroDAO.listar();
-        request.setAttribute("livros", livros);
-        request.getRequestDispatcher("livro-lista.jsp").forward(request, response);
+    private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("livros", livroDAO.listarTodos());
+        request.getRequestDispatcher("/lista-livros.jsp").forward(request, response);
     }
 
-    private void inserir(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Livro livro = montarLivro(request);
-        livroDAO.inserir(livro);
-        response.sendRedirect("livros");
-    }
-
-    private void editar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String id = request.getParameter("id");
-        Livro livro = livroDAO.buscarPorId(id);
+    private void abrirFormulario(HttpServletRequest request, HttpServletResponse response, Livro livro) throws ServletException, IOException {
         request.setAttribute("livro", livro);
-        request.getRequestDispatcher("livro-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/form-livro.jsp").forward(request, response);
     }
 
-    private void atualizar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Livro livro = montarLivro(request);
-        livro.setId(request.getParameter("id"));
-        livroDAO.atualizar(livro);
-        response.sendRedirect("livros");
+    private void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Livro livro = livroDAO.buscarPorId(id);
+
+        if (livro == null) {
+            request.getSession().setAttribute("mensagemErro", "Livro não encontrado.");
+            response.sendRedirect(request.getContextPath() + "/livros");
+            return;
+        }
+
+        abrirFormulario(request, response, livro);
     }
 
-    private void excluir(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String id = request.getParameter("id");
-        livroDAO.excluir(id);
-        response.sendRedirect("livros");
-    }
-
-    private Livro montarLivro(HttpServletRequest request) {
+    private void salvar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Livro livro = new Livro();
+
+        String id = request.getParameter("id");
+        if (id != null && !id.isBlank()) {
+            livro.setId(Integer.parseInt(id));
+        }
+
         livro.setNomeLivro(request.getParameter("nomeLivro"));
         livro.setIsbn(request.getParameter("isbn"));
         livro.setAutor(request.getParameter("autor"));
-        livro.setDataPublicacao(request.getParameter("dataPublicacao"));
+        livro.setDataPublicacao(LocalDate.parse(request.getParameter("dataPublicacao")));
+        livro.setValorLivro(new BigDecimal(request.getParameter("valorLivro").replace(",", ".")));
 
-        String valor = request.getParameter("valorLivro");
-        livro.setValorLivro(valor == null || valor.isBlank() ? BigDecimal.ZERO : new BigDecimal(valor));
-        return livro;
+        validar(livro);
+        livroDAO.salvar(livro);
+
+        String mensagem = livro.getId() == null ? "Livro cadastrado com sucesso!" : "Livro atualizado com sucesso!";
+        request.getSession().setAttribute("mensagemSucesso", mensagem);
+        response.sendRedirect(request.getContextPath() + "/livros");
+    }
+
+    private void excluir(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        livroDAO.excluir(id);
+        request.getSession().setAttribute("mensagemSucesso", "Livro excluído com sucesso!");
+        response.sendRedirect(request.getContextPath() + "/livros");
+    }
+
+    private void validar(Livro livro) {
+        if (livro.getNomeLivro() == null || livro.getNomeLivro().isBlank()) {
+            throw new IllegalArgumentException("O nome do livro é obrigatório.");
+        }
+        if (livro.getIsbn() == null || livro.getIsbn().isBlank()) {
+            throw new IllegalArgumentException("O ISBN é obrigatório.");
+        }
+        if (livro.getAutor() == null || livro.getAutor().isBlank()) {
+            throw new IllegalArgumentException("O autor é obrigatório.");
+        }
+        if (livro.getDataPublicacao() == null) {
+            throw new IllegalArgumentException("A data de publicação é obrigatória.");
+        }
+        if (livro.getValorLivro() == null || livro.getValorLivro().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("O valor do livro deve ser maior ou igual a zero.");
+        }
+    }
+
+    private void tratarErro(HttpServletRequest request, HttpServletResponse response, Exception e) throws ServletException, IOException {
+        request.setAttribute("mensagemErro", e.getMessage());
+        request.setAttribute("livros", livroDAO.listarTodos());
+        request.getRequestDispatcher("/lista-livros.jsp").forward(request, response);
     }
 }

@@ -1,8 +1,9 @@
 target/
 *.log
 .env
-src/main/resources/firebase-key.json
-firebase-key.json
 .idea/
 .vscode/
 *.iml
+.settings/
+.classpath
+.project

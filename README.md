@@ -1,86 +1,126 @@
-# Cadastro de Livros - Java Web + Servlets + Firebase
+# BibliotecaJava - Cadastro de Livros
 
-Sistema Java Web para manutenção de cadastro de livros.
+Projeto desenvolvido para a disciplina de Programação Java Web.
+
+## Integrantes
+
+- Cauã Henrique de Oliveira
+- Leonardo
+
+## Objetivo
+
+Construir um sistema Java Web utilizando JSP e Servlets para realizar a manutenção de um cadastro de livros.
+
+## Classe Livro
+
+A classe `Livro` possui os seguintes atributos:
+
+- `id`
+- `nomeLivro`
+- `isbn`
+- `autor`
+- `dataPublicacao`
+- `valorLivro`
 
 ## Funcionalidades
 
 - Listar livros cadastrados
 - Cadastrar livros
-- Editar livros
+- Alterar livros
 - Excluir livros
-- Interface responsiva para PC e celular
-- Banco online com Firebase Firestore
+- Interface responsiva para computador e celular
 
-## Tecnologias
+## Tecnologias utilizadas
 
 - Java 17
+- JSP
+- Servlets Jakarta
+- JDBC
+- PostgreSQL
 - Maven
-- Jakarta Servlets
-- JSP/JSTL
-- Firebase Admin SDK
-- Cloud Firestore
 - Bootstrap 5
-- Apache Tomcat 10+
+- Apache Tomcat 10
 
-## Classe Livro
-
-- id
-- nomeLivro
-- isbn
-- autor
-- dataPublicacao
-- valorLivro
-
-## Configuração do Firebase
-
-1. Acesse o Firebase Console.
-2. Crie um projeto.
-3. Vá em **Build > Firestore Database**.
-4. Clique em **Criar banco de dados**.
-5. Escolha modo de teste ou produção.
-6. Vá em **Configurações do projeto > Contas de serviço**.
-7. Clique em **Gerar nova chave privada**.
-8. Renomeie o arquivo baixado para:
+## Estrutura do projeto
 
 ```text
-firebase-key.json
+src/main/java/br/com/cadastro
+├── dao
+│   └── LivroDAO.java
+├── model
+│   └── Livro.java
+├── servlet
+│   └── LivroServlet.java
+└── util
+    └── Conexao.java
+
+src/main/webapp
+├── index.jsp
+├── lista-livros.jsp
+├── form-livro.jsp
+├── css/style.css
+└── WEB-INF/web.xml
 ```
 
-9. Coloque o arquivo em:
+## Banco de dados
+
+O script está em:
 
 ```text
-src/main/resources/firebase-key.json
+database/script.sql
 ```
 
-> Importante: esse arquivo não deve ser enviado para o GitHub.
+Script principal:
+
+```sql
+CREATE DATABASE biblioteca_java;
+
+CREATE TABLE IF NOT EXISTS livros (
+    id SERIAL PRIMARY KEY,
+    nome_livro VARCHAR(150) NOT NULL,
+    isbn VARCHAR(50) NOT NULL,
+    autor VARCHAR(120) NOT NULL,
+    data_publicacao DATE NOT NULL,
+    valor_livro NUMERIC(10,2) NOT NULL
+);
+```
+
+## Configuração da conexão
+
+Por padrão, o sistema tenta conectar em:
+
+```text
+URL: jdbc:postgresql://localhost:5432/biblioteca_java
+Usuário: postgres
+Senha: postgres
+```
+
+Caso sua senha seja diferente, altere o arquivo:
+
+```text
+src/main/java/br/com/cadastro/util/Conexao.java
+```
+
+Ou configure variáveis de ambiente:
+
+```text
+DB_URL
+DB_USER
+DB_PASSWORD
+```
 
 ## Como executar
 
-No terminal, dentro da pasta do projeto:
-
-```bash
-mvn clean package
-```
-
-Depois execute no Apache Tomcat 10 ou superior.
-
-Acesse:
+1. Criar o banco no PostgreSQL usando o script `database/script.sql`.
+2. Importar o projeto no Eclipse como projeto Maven.
+3. Configurar Apache Tomcat 10.
+4. Executar o projeto em `Run As > Run on Server`.
+5. Acessar:
 
 ```text
-http://localhost:8080/cadastro-livros-firebase/livros
+http://localhost:8080/BibliotecaJava_Caua-Leonardo/livros
 ```
 
-## GitHub
+## Observação
 
-O projeto já possui `.gitignore` para impedir que a chave privada do Firebase seja enviada.
-
-Comandos básicos:
-
-```bash
-git init
-git add .
-git commit -m "Cadastro de livros com Java Web e Firebase"
-git branch -M main
-git remote add origin LINK_DO_REPOSITORIO
-git push -u origin main
-```
+Este projeto segue o padrão de Java Web tradicional com JSP, Servlet, DAO, JDBC e PostgreSQL.

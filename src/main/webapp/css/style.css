@@ -1,0 +1,58 @@
+:root {
+    --primary-color: #1f4f8f;
+    --dark-color: #172033;
+    --light-bg: #f4f7fb;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--light-bg);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar-custom {
+    background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+}
+
+.hero-card {
+    border: none;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(23, 32, 51, 0.12);
+}
+
+.table-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(23, 32, 51, 0.10);
+}
+
+.btn-rounded {
+    border-radius: 999px;
+}
+
+.form-control, .form-select {
+    border-radius: 12px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .desktop-table {
+        display: none;
+    }
+
+    .mobile-card {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-card {
+        display: none;
+    }
+}

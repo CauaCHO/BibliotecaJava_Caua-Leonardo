@@ -1,73 +1,125 @@
 package br.com.cadastro.dao;
 
 import br.com.cadastro.model.Livro;
-import br.com.cadastro.util.FirebaseConfig;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import br.com.cadastro.util.Conexao;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LivroDAO {
-    private final Firestore db = FirebaseConfig.getFirestore();
-    private final CollectionReference livros = db.collection("livros");
 
-    public void inserir(Livro livro) throws Exception {
-        Map<String, Object> dados = livroParaMap(livro);
-        livros.add(dados).get();
-    }
-
-    public List<Livro> listar() throws Exception {
-        ApiFuture<QuerySnapshot> future = livros.orderBy("nomeLivro").get();
-        List<QueryDocumentSnapshot> documentos = future.get().getDocuments();
-        List<Livro> lista = new ArrayList<>();
-
-        for (QueryDocumentSnapshot doc : documentos) {
-            lista.add(documentoParaLivro(doc));
-        }
-        return lista;
-    }
-
-    public Livro buscarPorId(String id) throws Exception {
-        DocumentSnapshot doc = livros.document(id).get().get();
-        if (!doc.exists()) {
-            return null;
-        }
-        return documentoParaLivro(doc);
-    }
-
-    public void atualizar(Livro livro) throws Exception {
-        livros.document(livro.getId()).set(livroParaMap(livro)).get();
-    }
-
-    public void excluir(String id) throws Exception {
-        livros.document(id).delete().get();
-    }
-
-    private Map<String, Object> livroParaMap(Livro livro) {
-        Map<String, Object> dados = new HashMap<>();
-        dados.put("nomeLivro", livro.getNomeLivro());
-        dados.put("isbn", livro.getIsbn());
-        dados.put("autor", livro.getAutor());
-        dados.put("dataPublicacao", livro.getDataPublicacao());
-        dados.put("valorLivro", livro.getValorLivro() != null ? livro.getValorLivro().doubleValue() : 0.0);
-        return dados;
-    }
-
-    private Livro documentoParaLivro(DocumentSnapshot doc) {
-        Livro livro = new Livro();
-        livro.setId(doc.getId());
-        livro.setNomeLivro(doc.getString("nomeLivro"));
-        livro.setIsbn(doc.getString("isbn"));
-        livro.setAutor(doc.getString("autor"));
-        livro.setDataPublicacao(doc.getString("dataPublicacao"));
-
-        Object valor = doc.get("valorLivro");
-        if (valor instanceof Number) {
-            livro.setValorLivro(BigDecimal.valueOf(((Number) valor).doubleValue()));
+    public void salvar(Livro livro) {
+        if (livro.getId() == null) {
+            inserir(livro);
         } else {
-            livro.setValorLivro(BigDecimal.ZERO);
+            atualizar(livro);
         }
+    }
+
+    public void inserir(Livro livro) {
+        String sql = "INSERT INTO livros (nome_livro, isbn, autor, data_publicacao, valor_livro) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql)) {
+
+            preencherStatement(ps, livro);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao inserir livro: " + e.getMessage(), e);
+        }
+    }
+
+    public List<Livro> listarTodos() {
+        List<Livro> livros = new ArrayList<>();
+        String sql = "SELECT id, nome_livro, isbn, autor, data_publicacao, valor_livro FROM livros ORDER BY id DESC";
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                livros.add(mapearLivro(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar livros: " + e.getMessage(), e);
+        }
+
+        return livros;
+    }
+
+    public Livro buscarPorId(int id) {
+        String sql = "SELECT id, nome_livro, isbn, autor, data_publicacao, valor_livro FROM livros WHERE id = ?";
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearLivro(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar livro: " + e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    public void atualizar(Livro livro) {
+        String sql = "UPDATE livros SET nome_livro = ?, isbn = ?, autor = ?, data_publicacao = ?, valor_livro = ? WHERE id = ?";
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql)) {
+
+            preencherStatement(ps, livro);
+            ps.setInt(6, livro.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar livro: " + e.getMessage(), e);
+        }
+    }
+
+    public void excluir(int id) {
+        String sql = "DELETE FROM livros WHERE id = ?";
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement ps = conexao.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao excluir livro: " + e.getMessage(), e);
+        }
+    }
+
+    private void preencherStatement(PreparedStatement ps, Livro livro) throws SQLException {
+        ps.setString(1, livro.getNomeLivro());
+        ps.setString(2, livro.getIsbn());
+        ps.setString(3, livro.getAutor());
+        ps.setDate(4, Date.valueOf(livro.getDataPublicacao()));
+        ps.setBigDecimal(5, livro.getValorLivro());
+    }
+
+    private Livro mapearLivro(ResultSet rs) throws SQLException {
+        Livro livro = new Livro();
+        livro.setId(rs.getInt("id"));
+        livro.setNomeLivro(rs.getString("nome_livro"));
+        livro.setIsbn(rs.getString("isbn"));
+        livro.setAutor(rs.getString("autor"));
+        livro.setDataPublicacao(rs.getDate("data_publicacao").toLocalDate());
+        livro.setValorLivro(rs.getBigDecimal("valor_livro"));
         return livro;
     }
 }
