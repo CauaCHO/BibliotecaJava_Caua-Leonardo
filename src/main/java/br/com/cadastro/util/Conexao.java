@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class Conexao {
 
-    private static final String URL_PADRAO = "jdbc:postgresql://localhost:5432/biblioteca_java";
+    private static final String URL_PADRAO = "jdbc:postgresql://localhost:5433/biblioteca";
     private static final String USUARIO_PADRAO = "postgres";
-    private static final String SENHA_PADRAO = "postgres";
+    private static final String SENHA_PADRAO = "123456";
 
     private Conexao() {
     }
