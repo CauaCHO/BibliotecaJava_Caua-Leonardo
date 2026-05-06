@@ -82,3 +82,14 @@ O projeto foi estruturado seguindo o padrão:
 
 ```text
 Model → DAO → Servlet → JSP
+
+---
+
+# ⚡ Inicialização Automática com `.bat`
+
+O projeto possui um script `.bat` para facilitar a configuração e execução do ambiente.
+
+## 📄 Arquivo
+
+```text
+instalar_tomcat.bat
