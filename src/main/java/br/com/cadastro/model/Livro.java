@@ -8,17 +8,19 @@ public class Livro {
     private String nomeLivro;
     private String isbn;
     private String autor;
+    private String email;
     private LocalDate dataPublicacao;
     private BigDecimal valorLivro;
 
     public Livro() {
     }
 
-    public Livro(Integer id, String nomeLivro, String isbn, String autor, LocalDate dataPublicacao, BigDecimal valorLivro) {
+    public Livro(Integer id, String nomeLivro, String isbn, String autor, String email, LocalDate dataPublicacao, BigDecimal valorLivro) {
         this.id = id;
         this.nomeLivro = nomeLivro;
         this.isbn = isbn;
         this.autor = autor;
+        this.email = email;
         this.dataPublicacao = dataPublicacao;
         this.valorLivro = valorLivro;
     }
@@ -53,6 +55,14 @@ public class Livro {
 
     public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LocalDate getDataPublicacao() {
