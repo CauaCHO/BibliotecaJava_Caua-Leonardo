@@ -15,17 +15,22 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container py-2">
+    <div class="container py-2 d-flex justify-content-between align-items-center">
         <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/livros">📚 Biblioteca Java</a>
+        <div class="d-flex gap-2">
+            <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
+            <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
+        </div>
     </div>
 </nav>
 
 <main class="container py-4">
-    <section class="card hero-card mx-auto" style="max-width: 850px;">
-        <div class="card-body p-4">
+    <section class="card hero-card mx-auto" style="max-width: 920px;">
+        <div class="card-body p-4 p-md-5">
             <div class="mb-4">
+                <span class="badge text-bg-primary mb-2"><%= editando ? "Edição" : "Novo cadastro" %></span>
                 <h1 class="h3 fw-bold mb-1"><%= editando ? "Editar Livro" : "Cadastrar Livro" %></h1>
-                <p class="text-muted mb-0">Preencha os dados abaixo para manter o cadastro atualizado.</p>
+                <p class="text-muted mb-0">Preencha os dados abaixo. O e-mail é validado no frontend e no backend.</p>
             </div>
 
             <form action="<%= request.getContextPath() %>/livros/salvar" method="post" class="row g-3">
@@ -47,17 +52,25 @@
 
                 <div class="col-12 col-md-6">
                     <label for="autor" class="form-label">Autor</label>
-                    <input type="text" class="form-control" id="autor" name="autor" maxlength="120" required
+                    <input type="text" class="form-control" id="autor" name="autor" maxlength="100" required
                            value="<%= livro != null && livro.getAutor() != null ? livro.getAutor() : "" %>">
                 </div>
 
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-6">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" name="email" maxlength="150" required
+                           placeholder="exemplo@email.com"
+                           value="<%= livro != null && livro.getEmail() != null ? livro.getEmail() : "" %>">
+                    <div class="form-text">Não pode ficar vazio, precisa ser válido e não pode ser duplicado.</div>
+                </div>
+
+                <div class="col-12 col-md-6">
                     <label for="dataPublicacao" class="form-label">Data de Publicação</label>
                     <input type="date" class="form-control" id="dataPublicacao" name="dataPublicacao" required
                            value="<%= livro != null && livro.getDataPublicacao() != null ? livro.getDataPublicacao() : "" %>">
                 </div>
 
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-6">
                     <label for="valorLivro" class="form-label">Valor do Livro</label>
                     <input type="number" class="form-control" id="valorLivro" name="valorLivro" min="0" step="0.01" required
                            value="<%= livro != null && livro.getValorLivro() != null ? livro.getValorLivro() : "" %>">
