@@ -1,5 +1,6 @@
 package br.com.cadastro.servlet;
 
+import br.com.cadastro.dao.EstadoDAO;
 import br.com.cadastro.dao.UsuarioDAO;
 import br.com.cadastro.model.Usuario;
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 public class UsuarioServlet extends HttpServlet {
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final EstadoDAO estadoDAO = new EstadoDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -82,6 +84,7 @@ public class UsuarioServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("usuario", usuario);
+        request.setAttribute("estados", estadoDAO.listarTodos());
 
         request.getRequestDispatcher("/form-usuario.jsp")
                 .forward(request, response);
@@ -117,6 +120,11 @@ public class UsuarioServlet extends HttpServlet {
         usuario.setNomeUsuario(request.getParameter("nomeUsuario"));
         usuario.setCpfCnpj(request.getParameter("cpfCnpj"));
         usuario.setEmail(request.getParameter("email"));
+
+        String estadoId = request.getParameter("estadoId");
+        if (estadoId != null && !estadoId.isBlank()) {
+            usuario.setEstadoId(Integer.parseInt(estadoId));
+        }
 
         validar(usuario);
 
@@ -174,6 +182,10 @@ public class UsuarioServlet extends HttpServlet {
 
         if (usuarioDAO.emailExiste(usuario.getEmail(), usuario.getId())) {
             throw new IllegalArgumentException("Já existe um usuário com este e-mail.");
+        }
+
+        if (usuario.getEstadoId() == null) {
+            throw new IllegalArgumentException("O estado do usuário é obrigatório.");
         }
     }
 
