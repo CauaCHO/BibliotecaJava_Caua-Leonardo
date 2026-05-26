@@ -1,5 +1,6 @@
 package br.com.cadastro.servlet;
 
+import br.com.cadastro.dao.CategoriaDAO;
 import br.com.cadastro.dao.LivroDAO;
 import br.com.cadastro.model.Livro;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.regex.Pattern;
 
 @WebServlet(urlPatterns = {
         "/livros",
@@ -23,9 +23,7 @@ import java.util.regex.Pattern;
 public class LivroServlet extends HttpServlet {
 
     private final LivroDAO livroDAO = new LivroDAO();
-
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,6 +85,7 @@ public class LivroServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("livro", livro);
+        request.setAttribute("categorias", categoriaDAO.listarTodos());
         request.getRequestDispatcher("/form-livro.jsp").forward(request, response);
     }
 
@@ -118,10 +117,14 @@ public class LivroServlet extends HttpServlet {
         livro.setNomeLivro(request.getParameter("nomeLivro"));
         livro.setIsbn(request.getParameter("isbn"));
         livro.setAutor(request.getParameter("autor"));
-        livro.setEmail(request.getParameter("email"));
         livro.setCapaLivro(request.getParameter("capaLivro"));
         livro.setDataPublicacao(LocalDate.parse(request.getParameter("dataPublicacao")));
         livro.setValorLivro(new BigDecimal(request.getParameter("valorLivro").replace(",", ".")));
+
+        String categoriaId = request.getParameter("categoriaId");
+        if (categoriaId != null && !categoriaId.isBlank()) {
+            livro.setCategoriaId(Integer.parseInt(categoriaId));
+        }
 
         validar(livro);
         livroDAO.salvar(livro);
@@ -153,16 +156,8 @@ public class LivroServlet extends HttpServlet {
             throw new IllegalArgumentException("O autor é obrigatório.");
         }
 
-        if (livro.getEmail() == null || livro.getEmail().isBlank()) {
-            throw new IllegalArgumentException("O e-mail é obrigatório.");
-        }
-
-        if (!EMAIL_PATTERN.matcher(livro.getEmail()).matches()) {
-            throw new IllegalArgumentException("Formato de e-mail inválido.");
-        }
-
-        if (livroDAO.emailExiste(livro.getEmail(), livro.getId())) {
-            throw new IllegalArgumentException("Este e-mail já está cadastrado.");
+        if (livro.getCategoriaId() == null) {
+            throw new IllegalArgumentException("A categoria do livro é obrigatória.");
         }
 
         if (livro.getDataPublicacao() == null) {
