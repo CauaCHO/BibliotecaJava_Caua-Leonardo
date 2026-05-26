@@ -27,12 +27,11 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
     <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/livros">
-            📚 Biblioteca Java
-        </a>
+        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">📚 Biblioteca Java</a>
 
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
             <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
+            <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/usuarios">Usuários</a>
             <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
         </div>
     </div>
@@ -48,13 +47,10 @@
                         <p class="text-muted mb-1">Total de Livros</p>
                         <h2 class="metric-value mb-0"><%= totalLivros != null ? totalLivros : 0 %></h2>
                     </div>
-                    <div class="book-cover">
-                        <i class="bi bi-book"></i>
-                    </div>
+                    <div class="book-cover"><i class="bi bi-book"></i></div>
                 </div>
             </div>
         </div>
-
         <div class="col-12 col-md-4">
             <div class="metric-card">
                 <div class="d-flex justify-content-between align-items-center">
@@ -62,13 +58,10 @@
                         <p class="text-muted mb-1">Sistema</p>
                         <h2 class="metric-value mb-0">Java Web</h2>
                     </div>
-                    <div class="book-cover">
-                        <i class="bi bi-code-slash"></i>
-                    </div>
+                    <div class="book-cover"><i class="bi bi-code-slash"></i></div>
                 </div>
             </div>
         </div>
-
         <div class="col-12 col-md-4">
             <div class="metric-card">
                 <div class="d-flex justify-content-between align-items-center">
@@ -76,9 +69,7 @@
                         <p class="text-muted mb-1">Banco de Dados</p>
                         <h2 class="metric-value mb-0">PostgreSQL</h2>
                     </div>
-                    <div class="book-cover">
-                        <i class="bi bi-database"></i>
-                    </div>
+                    <div class="book-cover"><i class="bi bi-database"></i></div>
                 </div>
             </div>
         </div>
@@ -89,23 +80,13 @@
             <div>
                 <span class="badge badge-soft mb-2">Sistema de Gestão de Biblioteca</span>
                 <h1 class="h3 fw-bold mb-1">Cadastro de Livros</h1>
-                <p class="text-muted mb-0">Gerencie livros, estados e informações do sistema.</p>
+                <p class="text-muted mb-0">Gerencie livros, usuários e estados do sistema.</p>
             </div>
 
-            <div class="d-flex gap-2 flex-wrap">
-                <form action="<%= request.getContextPath() %>/livros" method="get">
-                    <input type="text"
-                           name="pesquisa"
-                           class="form-control"
-                           placeholder="Pesquisar livro ou autor...">
-                </form>
-
-                <a href="<%= request.getContextPath() %>/livros/novo"
-                   class="btn btn-primary btn-rounded px-4">
-                    <i class="bi bi-plus-lg"></i>
-                    Novo Livro
-                </a>
-            </div>
+            <a href="<%= request.getContextPath() %>/livros/novo" class="btn btn-primary btn-rounded px-4">
+                <i class="bi bi-plus-lg"></i>
+                Novo Livro
+            </a>
         </div>
     </section>
 
@@ -123,10 +104,14 @@
         </div>
     <% } %>
 
+    <div class="mb-3">
+        <input id="buscaInstantanea" type="text" class="form-control" placeholder="Buscar livro por nome, ISBN, autor ou e-mail...">
+    </div>
+
     <section class="card table-card">
         <div class="card-body p-0">
             <div class="table-responsive desktop-table">
-                <table class="table table-hover align-middle mb-0">
+                <table id="tabelaDados" class="table table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
                         <th>ID</th>
@@ -137,51 +122,29 @@
                         <th class="text-end">Ações</th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <% if (livros == null || livros.isEmpty()) { %>
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
-                                Nenhum livro cadastrado.
-                            </td>
-                        </tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">Nenhum livro cadastrado.</td></tr>
                     <% } else { %>
-
                         <% for (Livro livro : livros) { %>
                             <tr>
                                 <td><%= livro.getId() %></td>
-
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="book-cover">
-                                            <i class="bi bi-book"></i>
-                                        </div>
-
+                                        <div class="book-cover"><i class="bi bi-book"></i></div>
                                         <div>
                                             <div class="fw-semibold"><%= livro.getNomeLivro() %></div>
-                                            <small class="text-muted">
-                                                ISBN: <%= livro.getIsbn() %>
-                                            </small>
+                                            <small class="text-muted">ISBN: <%= livro.getIsbn() %></small>
                                         </div>
                                     </div>
                                 </td>
-
                                 <td><%= livro.getEmail() %></td>
                                 <td><%= livro.getAutor() %></td>
                                 <td>R$ <%= livro.getValorLivro() %></td>
-
                                 <td>
                                     <div class="action-buttons justify-content-end">
-                                        <a class="btn btn-sm btn-outline-primary"
-                                           href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <a class="btn btn-sm btn-outline-danger"
-                                           href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>"
-                                           onclick="return confirm('Deseja realmente excluir este livro?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>"><i class="bi bi-pencil"></i></a>
+                                        <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>" onclick="return confirm('Deseja realmente excluir este livro?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -195,5 +158,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<%= request.getContextPath() %>/js/app.js"></script>
 </body>
 </html>
