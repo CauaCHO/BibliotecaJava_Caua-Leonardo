@@ -1,7 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List" %>
 <%@ page import="br.com.cadastro.model.Livro" %>
+<%@ page import="br.com.cadastro.model.Categoria" %>
 <%
     Livro livro = (Livro) request.getAttribute("livro");
+    List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
     boolean editando = livro != null && livro.getId() != null;
     String capaAtual = livro != null && livro.getCapaLivro() != null && !livro.getCapaLivro().isBlank()
             ? livro.getCapaLivro()
@@ -39,7 +42,7 @@
             <div class="mb-4">
                 <span class="badge text-bg-primary mb-2"><%= editando ? "Edição" : "Novo cadastro" %></span>
                 <h1 class="h3 fw-bold mb-1"><%= editando ? "Editar Livro" : "Cadastrar Livro" %></h1>
-                <p class="text-muted mb-0">Preencha os dados abaixo. A capa pode ser uma URL de imagem.</p>
+                <p class="text-muted mb-0">Preencha os dados abaixo. O livro deve estar vinculado a uma categoria.</p>
             </div>
 
             <form id="formLivro" action="<%= request.getContextPath() %>/livros/salvar" method="post" class="row g-4">
@@ -68,11 +71,19 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label for="email" class="form-label">E-mail</label>
-                            <input type="email" class="form-control" id="email" name="email" maxlength="150" required
-                                   placeholder="exemplo@email.com"
-                                   value="<%= livro != null && livro.getEmail() != null ? livro.getEmail() : "" %>">
-                            <div class="form-text">Não pode ficar vazio, precisa ser válido e não pode ser duplicado.</div>
+                            <label for="categoriaId" class="form-label">Categoria</label>
+                            <select class="form-select" id="categoriaId" name="categoriaId" required>
+                                <option value="">Selecione uma categoria</option>
+                                <% if (categorias != null) { %>
+                                    <% for (Categoria categoria : categorias) { %>
+                                        <option value="<%= categoria.getId() %>"
+                                            <%= livro != null && livro.getCategoriaId() != null && livro.getCategoriaId().equals(categoria.getId()) ? "selected" : "" %>>
+                                            <%= categoria.getNomeCategoria() %>
+                                        </option>
+                                    <% } %>
+                                <% } %>
+                            </select>
+                            <div class="form-text">Agora livro pertence a uma categoria.</div>
                         </div>
 
                         <div class="col-12">
