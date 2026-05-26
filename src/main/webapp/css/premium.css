@@ -44,3 +44,138 @@ body {
 .table tbody tr:hover {
     background: #f8fafc;
 }
+
+.dashboard-body {
+    background: #f1f5f9;
+}
+
+.dashboard-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, #0f172a, #111827);
+    color: #ffffff;
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-brand h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.sidebar-brand span {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-nav a {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 13px 14px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.2s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    color: #ffffff;
+    background: #4f46e5;
+    transform: translateX(4px);
+}
+
+.dashboard-content {
+    padding: 34px;
+}
+
+.dashboard-card {
+    min-height: 160px;
+    padding: 26px;
+    border-radius: 28px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.18);
+    transition: 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+}
+
+.dashboard-blue {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+
+.dashboard-green {
+    background: linear-gradient(135deg, #059669, #0f766e);
+}
+
+.dashboard-purple {
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+}
+
+.dashboard-label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+}
+
+.dashboard-card h2 {
+    font-weight: 800;
+    margin: 4px 0;
+}
+
+.dashboard-icon {
+    font-size: 3.2rem;
+    opacity: 0.85;
+}
+
+.dark-mode {
+    background: #020617;
+    color: #e5e7eb;
+}
+
+.dark-mode .dashboard-content,
+.dark-mode .card,
+.dark-mode .metric-card,
+.dark-mode .hero-card,
+.dark-mode .table-card {
+    background: #0f172a !important;
+    color: #e5e7eb;
+}
+
+.dark-mode .text-muted {
+    color: #94a3b8 !important;
+}
+
+@media (max-width: 900px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        min-height: auto;
+    }
+
+    .dashboard-content {
+        padding: 20px;
+    }
+}
