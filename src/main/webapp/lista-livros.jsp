@@ -82,7 +82,7 @@
             <div>
                 <span class="badge badge-soft mb-2">Sistema de Gestão de Biblioteca</span>
                 <h1 class="h3 fw-bold mb-1">Cadastro de Livros</h1>
-                <p class="text-muted mb-0">Gerencie livros, usuários e estados do sistema.</p>
+                <p class="text-muted mb-0">Agora os livros possuem relacionamento com categorias.</p>
             </div>
 
             <a href="<%= request.getContextPath() %>/livros/novo" class="btn btn-primary btn-rounded px-4">
@@ -108,7 +108,7 @@
 
     <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
         <input id="buscaInstantanea" type="text" class="form-control" style="max-width: 420px;"
-               placeholder="Buscar livro por nome, ISBN, autor ou e-mail...">
+               placeholder="Buscar livro por nome, ISBN, autor ou categoria...">
 
         <span class="badge text-bg-dark fs-6 px-3 py-2">
             <%= livros != null ? livros.size() : 0 %> resultado(s)
@@ -124,7 +124,7 @@
                         <th>ID</th>
                         <th>Capa</th>
                         <th>Livro</th>
-                        <th>Email</th>
+                        <th>Categoria</th>
                         <th>Autor</th>
                         <th>Valor</th>
                         <th class="text-end">Ações</th>
@@ -159,7 +159,12 @@
                                     </div>
                                 </td>
 
-                                <td><%= livro.getEmail() %></td>
+                                <td>
+                                    <span class="badge text-bg-primary">
+                                        <%= livro.getNomeCategoria() != null ? livro.getNomeCategoria() : "Sem categoria" %>
+                                    </span>
+                                </td>
+
                                 <td><%= livro.getAutor() %></td>
                                 <td>R$ <%= livro.getValorLivro() %></td>
 
