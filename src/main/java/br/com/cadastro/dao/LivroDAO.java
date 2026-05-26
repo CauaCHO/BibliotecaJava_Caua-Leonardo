@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class LivroDAO {
     }
 
     public void inserir(Livro livro) {
-        String sql = "INSERT INTO livros (nome_livro, isbn, autor, email, capa_livro, data_publicacao, valor_livro) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO livros (nome_livro, isbn, autor, capa_livro, data_publicacao, valor_livro, categoria_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
@@ -37,7 +39,12 @@ public class LivroDAO {
 
     public List<Livro> listarTodos() {
         List<Livro> livros = new ArrayList<>();
-        String sql = "SELECT id, nome_livro, isbn, autor, email, capa_livro, data_publicacao, valor_livro FROM livros ORDER BY id DESC";
+
+        String sql = "SELECT l.id, l.nome_livro, l.isbn, l.autor, l.capa_livro, l.data_publicacao, " +
+                "l.valor_livro, l.categoria_id, c.nome_categoria " +
+                "FROM livros l " +
+                "LEFT JOIN categorias c ON c.id = l.categoria_id " +
+                "ORDER BY l.id DESC";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql);
@@ -56,9 +63,16 @@ public class LivroDAO {
 
     public List<Livro> pesquisar(String termo) {
         List<Livro> livros = new ArrayList<>();
-        String sql = "SELECT id, nome_livro, isbn, autor, email, capa_livro, data_publicacao, valor_livro " +
-                "FROM livros WHERE LOWER(nome_livro) LIKE LOWER(?) OR LOWER(autor) LIKE LOWER(?) OR LOWER(isbn) LIKE LOWER(?) OR LOWER(email) LIKE LOWER(?) " +
-                "ORDER BY id DESC";
+
+        String sql = "SELECT l.id, l.nome_livro, l.isbn, l.autor, l.capa_livro, l.data_publicacao, " +
+                "l.valor_livro, l.categoria_id, c.nome_categoria " +
+                "FROM livros l " +
+                "LEFT JOIN categorias c ON c.id = l.categoria_id " +
+                "WHERE LOWER(l.nome_livro) LIKE LOWER(?) " +
+                "OR LOWER(l.autor) LIKE LOWER(?) " +
+                "OR LOWER(l.isbn) LIKE LOWER(?) " +
+                "OR LOWER(COALESCE(c.nome_categoria, '')) LIKE LOWER(?) " +
+                "ORDER BY l.id DESC";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
@@ -83,7 +97,11 @@ public class LivroDAO {
     }
 
     public Livro buscarPorId(int id) {
-        String sql = "SELECT id, nome_livro, isbn, autor, email, capa_livro, data_publicacao, valor_livro FROM livros WHERE id = ?";
+        String sql = "SELECT l.id, l.nome_livro, l.isbn, l.autor, l.capa_livro, l.data_publicacao, " +
+                "l.valor_livro, l.categoria_id, c.nome_categoria " +
+                "FROM livros l " +
+                "LEFT JOIN categorias c ON c.id = l.categoria_id " +
+                "WHERE l.id = ?";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
@@ -103,30 +121,6 @@ public class LivroDAO {
         return null;
     }
 
-    public boolean emailExiste(String email, Integer idIgnorado) {
-        String sql = "SELECT COUNT(*) FROM livros WHERE LOWER(email) = LOWER(?)";
-
-        if (idIgnorado != null) {
-            sql += " AND id <> ?";
-        }
-
-        try (Connection conexao = Conexao.getConexao();
-             PreparedStatement ps = conexao.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-            if (idIgnorado != null) {
-                ps.setInt(2, idIgnorado);
-            }
-
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao validar e-mail duplicado: " + e.getMessage(), e);
-        }
-    }
-
     public long contar() {
         String sql = "SELECT COUNT(*) FROM livros";
 
@@ -142,7 +136,8 @@ public class LivroDAO {
     }
 
     public void atualizar(Livro livro) {
-        String sql = "UPDATE livros SET nome_livro = ?, isbn = ?, autor = ?, email = ?, capa_livro = ?, data_publicacao = ?, valor_livro = ? WHERE id = ?";
+        String sql = "UPDATE livros SET nome_livro = ?, isbn = ?, autor = ?, capa_livro = ?, " +
+                "data_publicacao = ?, valor_livro = ?, categoria_id = ? WHERE id = ?";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
@@ -174,10 +169,15 @@ public class LivroDAO {
         ps.setString(1, livro.getNomeLivro());
         ps.setString(2, livro.getIsbn());
         ps.setString(3, livro.getAutor());
-        ps.setString(4, livro.getEmail());
-        ps.setString(5, livro.getCapaLivro());
-        ps.setDate(6, Date.valueOf(livro.getDataPublicacao()));
-        ps.setBigDecimal(7, livro.getValorLivro());
+        ps.setString(4, livro.getCapaLivro());
+        ps.setDate(5, Date.valueOf(livro.getDataPublicacao()));
+        ps.setBigDecimal(6, livro.getValorLivro());
+
+        if (livro.getCategoriaId() == null) {
+            ps.setNull(7, Types.INTEGER);
+        } else {
+            ps.setInt(7, livro.getCategoriaId());
+        }
     }
 
     private Livro mapearLivro(ResultSet rs) throws SQLException {
@@ -186,10 +186,16 @@ public class LivroDAO {
         livro.setNomeLivro(rs.getString("nome_livro"));
         livro.setIsbn(rs.getString("isbn"));
         livro.setAutor(rs.getString("autor"));
-        livro.setEmail(rs.getString("email"));
         livro.setCapaLivro(rs.getString("capa_livro"));
         livro.setDataPublicacao(rs.getDate("data_publicacao").toLocalDate());
         livro.setValorLivro(rs.getBigDecimal("valor_livro"));
+
+        int categoriaId = rs.getInt("categoria_id");
+        if (!rs.wasNull()) {
+            livro.setCategoriaId(categoriaId);
+        }
+
+        livro.setNomeCategoria(rs.getString("nome_categoria"));
         return livro;
     }
 }
