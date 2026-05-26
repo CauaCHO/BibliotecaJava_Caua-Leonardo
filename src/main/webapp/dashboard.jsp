@@ -12,94 +12,133 @@
     <link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
     <link href="<%= request.getContextPath() %>/css/premium.css" rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
-    <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/livros">
-            📚 Biblioteca Java
-        </a>
+<body class="dashboard-body">
 
-        <div class="d-flex gap-2">
-            <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
-            <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
-        </div>
-    </div>
-</nav>
+<div class="dashboard-layout">
 
-<main class="container py-4">
+    <aside class="sidebar shadow-lg">
+        <div>
+            <div class="sidebar-brand">
+                <h2>📚 Biblioteca</h2>
+                <span>Java Web System</span>
+            </div>
 
-    <section class="card hero-card mb-4">
-        <div class="card-body p-5 text-center">
-            <span class="badge badge-soft mb-3">Sistema de Gestão de Biblioteca</span>
-            <h1 class="display-5 fw-bold mb-3">Dashboard Principal</h1>
-            <p class="text-muted mb-4">
-                Gerencie livros, estados e informações do sistema em um único ambiente.
-            </p>
+            <nav class="sidebar-nav mt-4">
+                <a href="<%= request.getContextPath() %>/dashboard.jsp" class="active">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard
+                </a>
 
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="<%= request.getContextPath() %>/livros"
-                   class="btn btn-primary btn-lg btn-rounded px-4">
+                <a href="<%= request.getContextPath() %>/livros">
                     <i class="bi bi-book"></i>
-                    Gerenciar Livros
+                    Livros
                 </a>
 
-                <a href="<%= request.getContextPath() %>/estados"
-                   class="btn btn-outline-primary btn-lg btn-rounded px-4">
+                <a href="<%= request.getContextPath() %>/usuarios">
+                    <i class="bi bi-people"></i>
+                    Usuários
+                </a>
+
+                <a href="<%= request.getContextPath() %>/estados">
                     <i class="bi bi-globe-americas"></i>
-                    Gerenciar Estados
+                    Estados
+                </a>
+            </nav>
+        </div>
+
+        <button class="btn btn-outline-light w-100 mt-4" id="toggleDarkMode" type="button">
+            <i class="bi bi-moon-stars"></i>
+            Dark Mode
+        </button>
+    </aside>
+
+    <main class="dashboard-content">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">Dashboard</h1>
+                <p class="text-muted mb-0">Sistema de Gestão de Biblioteca em Java Web</p>
+            </div>
+
+            <div class="badge text-bg-primary fs-6 px-3 py-2 shadow-sm">
+                Java + JSP + Servlet + PostgreSQL
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-4">
+                <a class="text-decoration-none" href="<%= request.getContextPath() %>/livros">
+                    <div class="dashboard-card dashboard-blue">
+                        <div>
+                            <span class="dashboard-label">Livros</span>
+                            <h2>CRUD</h2>
+                            <small>Cadastro, alteração e exclusão</small>
+                        </div>
+
+                        <i class="bi bi-book-half dashboard-icon"></i>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a class="text-decoration-none" href="<%= request.getContextPath() %>/usuarios">
+                    <div class="dashboard-card dashboard-green">
+                        <div>
+                            <span class="dashboard-label">Usuários</span>
+                            <h2>Cadastro</h2>
+                            <small>CPF/CNPJ, e-mail e validações</small>
+                        </div>
+
+                        <i class="bi bi-people-fill dashboard-icon"></i>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a class="text-decoration-none" href="<%= request.getContextPath() %>/estados">
+                    <div class="dashboard-card dashboard-purple">
+                        <div>
+                            <span class="dashboard-label">Estados</span>
+                            <h2>Gerenciamento</h2>
+                            <small>Sigla única e validações</small>
+                        </div>
+
+                        <i class="bi bi-globe dashboard-icon"></i>
+                    </div>
                 </a>
             </div>
         </div>
-    </section>
 
-    <div class="row g-4">
+        <section class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <h3 class="fw-bold mb-3">📌 Sobre o Projeto</h3>
 
-        <div class="col-12 col-md-4">
-            <div class="metric-card h-100">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Tecnologia</p>
-                        <h2 class="metric-value mb-0">Java Web</h2>
-                    </div>
+            <p class="text-muted mb-0">
+                Projeto desenvolvido seguindo o padrão Java Web tradicional com JSP, Servlets, DAO, JDBC e PostgreSQL.
+                O sistema possui gerenciamento de livros, usuários e estados, além de validações frontend/backend,
+                dashboard administrativa e estrutura MVC baseada nas aulas da disciplina.
+            </p>
+        </section>
 
-                    <div class="book-cover">
-                        <i class="bi bi-code-square"></i>
-                    </div>
-                </div>
+        <section class="card border-0 shadow-sm rounded-4 p-4">
+            <h3 class="fw-bold mb-3">✅ Recursos Implementados</h3>
+
+            <div class="row g-3">
+                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">JSP</span></div>
+                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">Servlet</span></div>
+                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">DAO</span></div>
+                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">PostgreSQL</span></div>
             </div>
-        </div>
+        </section>
+    </main>
+</div>
 
-        <div class="col-12 col-md-4">
-            <div class="metric-card h-100">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Banco de Dados</p>
-                        <h2 class="metric-value mb-0">PostgreSQL</h2>
-                    </div>
-
-                    <div class="book-cover">
-                        <i class="bi bi-database"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="metric-card h-100">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Arquitetura</p>
-                        <h2 class="metric-value mb-0">MVC + DAO</h2>
-                    </div>
-
-                    <div class="book-cover">
-                        <i class="bi bi-diagram-3"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
+<script>
+    const toggle = document.getElementById('toggleDarkMode');
+    toggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
