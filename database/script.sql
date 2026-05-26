@@ -1,6 +1,10 @@
+-- Banco de dados do Sistema de Gestão de Biblioteca
+-- PostgreSQL
+
 CREATE DATABASE biblioteca;
 
--- Depois de criar o banco, conecte nele e execute os comandos abaixo.
+-- IMPORTANTE:
+-- Depois de criar o banco, conecte-se ao banco "biblioteca" antes de executar o restante deste script.
 
 CREATE TABLE IF NOT EXISTS estados (
     id SERIAL PRIMARY KEY,
@@ -18,17 +22,31 @@ CREATE TABLE IF NOT EXISTS livros (
     valor_livro NUMERIC(10,2) NOT NULL
 );
 
--- Migração para quem já tinha criado a tabela estados com nomes antigos.
-ALTER TABLE estados ADD COLUMN IF NOT EXISTS nome_estado VARCHAR(100);
-ALTER TABLE estados ADD COLUMN IF NOT EXISTS sigla_estado VARCHAR(2);
-UPDATE estados SET nome_estado = nome WHERE nome_estado IS NULL AND EXISTS (
-    SELECT 1 FROM information_schema.columns WHERE table_name = 'estados' AND column_name = 'nome'
-);
-UPDATE estados SET sigla_estado = sigla WHERE sigla_estado IS NULL AND EXISTS (
-    SELECT 1 FROM information_schema.columns WHERE table_name = 'estados' AND column_name = 'sigla'
-);
+-- Migração segura para quem já criou a tabela estados com os campos antigos: nome e sigla.
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'estados' AND column_name = 'nome'
+    ) AND NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'estados' AND column_name = 'nome_estado'
+    ) THEN
+        ALTER TABLE estados RENAME COLUMN nome TO nome_estado;
+    END IF;
 
--- Migração para quem já tinha criado a tabela livros sem o campo email.
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'estados' AND column_name = 'sigla'
+    ) AND NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'estados' AND column_name = 'sigla_estado'
+    ) THEN
+        ALTER TABLE estados RENAME COLUMN sigla TO sigla_estado;
+    END IF;
+END $$;
+
+-- Migração segura para quem já criou a tabela livros sem o campo email.
 ALTER TABLE livros ADD COLUMN IF NOT EXISTS email VARCHAR(150);
 UPDATE livros SET email = CONCAT('livro', id, '@exemplo.com') WHERE email IS NULL;
 ALTER TABLE livros ALTER COLUMN email SET NOT NULL;
