@@ -51,6 +51,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-12 col-md-4">
             <div class="metric-card">
                 <div class="d-flex justify-content-between align-items-center">
@@ -62,6 +63,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-12 col-md-4">
             <div class="metric-card">
                 <div class="d-flex justify-content-between align-items-center">
@@ -104,8 +106,13 @@
         </div>
     <% } %>
 
-    <div class="mb-3">
-        <input id="buscaInstantanea" type="text" class="form-control" placeholder="Buscar livro por nome, ISBN, autor ou e-mail...">
+    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
+        <input id="buscaInstantanea" type="text" class="form-control" style="max-width: 420px;"
+               placeholder="Buscar livro por nome, ISBN, autor ou e-mail...">
+
+        <span class="badge text-bg-dark fs-6 px-3 py-2">
+            <%= livros != null ? livros.size() : 0 %> resultado(s)
+        </span>
     </div>
 
     <section class="card table-card">
@@ -115,6 +122,7 @@
                     <thead class="table-dark">
                     <tr>
                         <th>ID</th>
+                        <th>Capa</th>
                         <th>Livro</th>
                         <th>Email</th>
                         <th>Autor</th>
@@ -124,27 +132,49 @@
                     </thead>
                     <tbody>
                     <% if (livros == null || livros.isEmpty()) { %>
-                        <tr><td colspan="6" class="text-center text-muted py-4">Nenhum livro cadastrado.</td></tr>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">Nenhum livro cadastrado.</td>
+                        </tr>
                     <% } else { %>
-                        <% for (Livro livro : livros) { %>
+                        <% for (Livro livro : livros) {
+                            String capa = livro.getCapaLivro() != null && !livro.getCapaLivro().isBlank()
+                                    ? livro.getCapaLivro()
+                                    : "https://placehold.co/80x110/4f46e5/ffffff?text=Livro";
+                        %>
                             <tr>
                                 <td><%= livro.getId() %></td>
+
                                 <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="book-cover"><i class="bi bi-book"></i></div>
-                                        <div>
-                                            <div class="fw-semibold"><%= livro.getNomeLivro() %></div>
-                                            <small class="text-muted">ISBN: <%= livro.getIsbn() %></small>
-                                        </div>
+                                    <img src="<%= capa %>"
+                                         alt="Capa"
+                                         class="rounded-3 shadow-sm"
+                                         style="width: 60px; height: 85px; object-fit: cover;"
+                                         onerror="this.src='https://placehold.co/80x110/4f46e5/ffffff?text=Livro'">
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <div class="fw-semibold"><%= livro.getNomeLivro() %></div>
+                                        <small class="text-muted">ISBN: <%= livro.getIsbn() %></small>
                                     </div>
                                 </td>
+
                                 <td><%= livro.getEmail() %></td>
                                 <td><%= livro.getAutor() %></td>
                                 <td>R$ <%= livro.getValorLivro() %></td>
+
                                 <td>
                                     <div class="action-buttons justify-content-end">
-                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>"><i class="bi bi-pencil"></i></a>
-                                        <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>" onclick="return confirm('Deseja realmente excluir este livro?')"><i class="bi bi-trash"></i></a>
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>"
+                                           onclick="return confirm('Deseja realmente excluir este livro?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -152,6 +182,16 @@
                     <% } %>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="p-3 border-top d-flex justify-content-center">
+                <nav>
+                    <ul class="pagination mb-0">
+                        <li class="page-item disabled"><a class="page-link">Anterior</a></li>
+                        <li class="page-item active"><a class="page-link">1</a></li>
+                        <li class="page-item disabled"><a class="page-link">Próximo</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </section>
