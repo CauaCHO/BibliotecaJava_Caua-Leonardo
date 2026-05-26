@@ -1,7 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List" %>
 <%@ page import="br.com.cadastro.model.Usuario" %>
+<%@ page import="br.com.cadastro.model.Estado" %>
 <%
     Usuario usuario = (Usuario) request.getAttribute("usuario");
+    List<Estado> estados = (List<Estado>) request.getAttribute("estados");
     boolean editando = usuario != null && usuario.getId() != null;
 %>
 <!DOCTYPE html>
@@ -31,12 +34,12 @@
 </nav>
 
 <main class="container py-4">
-    <section class="card hero-card mx-auto" style="max-width: 700px;">
+    <section class="card hero-card mx-auto" style="max-width: 760px;">
         <div class="card-body p-5">
             <div class="mb-4">
                 <span class="badge badge-soft mb-2"><%= editando ? "Edição" : "Novo Cadastro" %></span>
                 <h1 class="h3 fw-bold mb-1"><%= editando ? "Editar Usuário" : "Cadastrar Usuário" %></h1>
-                <p class="text-muted mb-0">Cadastro seguindo o padrão Java Web das aulas.</p>
+                <p class="text-muted mb-0">O usuário agora fica vinculado a um estado cadastrado.</p>
             </div>
 
             <form id="formUsuario" action="<%= request.getContextPath() %>/usuarios/salvar" method="post" class="row g-3 needs-validation" novalidate>
@@ -63,6 +66,22 @@
                     <input type="email" class="form-control" id="email" name="email" maxlength="150" required
                            value="<%= usuario != null && usuario.getEmail() != null ? usuario.getEmail() : "" %>">
                     <div class="invalid-feedback">Informe um e-mail válido.</div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Estado</label>
+                    <select class="form-select" name="estadoId" required>
+                        <option value="">Selecione um estado</option>
+                        <% if (estados != null) { %>
+                            <% for (Estado estado : estados) { %>
+                                <option value="<%= estado.getId() %>"
+                                    <%= usuario != null && usuario.getEstadoId() != null && usuario.getEstadoId().equals(estado.getId()) ? "selected" : "" %>>
+                                    <%= estado.getNomeEstado() %> - <%= estado.getSiglaEstado() %>
+                                </option>
+                            <% } %>
+                        <% } %>
+                    </select>
+                    <div class="invalid-feedback">Selecione o estado do usuário.</div>
                 </div>
 
                 <div class="col-12 d-flex justify-content-end gap-2 mt-4">
