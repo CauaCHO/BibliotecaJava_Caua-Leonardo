@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +22,12 @@ public class UsuarioDAO {
     }
 
     private void inserir(Usuario usuario) {
-        String sql = "INSERT INTO usuarios (nome_usuario, cpf_cnpj, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO usuarios (nome_usuario, cpf_cnpj, email, estado_id) VALUES (?, ?, ?, ?)";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
 
-            ps.setString(1, usuario.getNomeUsuario());
-            ps.setString(2, usuario.getCpfCnpj());
-            ps.setString(3, usuario.getEmail());
-
+            preencherStatement(ps, usuario);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -38,16 +36,13 @@ public class UsuarioDAO {
     }
 
     private void atualizar(Usuario usuario) {
-        String sql = "UPDATE usuarios SET nome_usuario = ?, cpf_cnpj = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE usuarios SET nome_usuario = ?, cpf_cnpj = ?, email = ?, estado_id = ? WHERE id = ?";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
 
-            ps.setString(1, usuario.getNomeUsuario());
-            ps.setString(2, usuario.getCpfCnpj());
-            ps.setString(3, usuario.getEmail());
-            ps.setInt(4, usuario.getId());
-
+            preencherStatement(ps, usuario);
+            ps.setInt(5, usuario.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -58,7 +53,11 @@ public class UsuarioDAO {
     public List<Usuario> listarTodos() {
         List<Usuario> usuarios = new ArrayList<>();
 
-        String sql = "SELECT * FROM usuarios ORDER BY nome_usuario";
+        String sql = "SELECT u.id, u.nome_usuario, u.cpf_cnpj, u.email, u.estado_id, " +
+                "e.nome_estado, e.sigla_estado " +
+                "FROM usuarios u " +
+                "LEFT JOIN estados e ON e.id = u.estado_id " +
+                "ORDER BY u.nome_usuario";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql);
@@ -76,7 +75,11 @@ public class UsuarioDAO {
     }
 
     public Usuario buscarPorId(int id) {
-        String sql = "SELECT * FROM usuarios WHERE id = ?";
+        String sql = "SELECT u.id, u.nome_usuario, u.cpf_cnpj, u.email, u.estado_id, " +
+                "e.nome_estado, e.sigla_estado " +
+                "FROM usuarios u " +
+                "LEFT JOIN estados e ON e.id = u.estado_id " +
+                "WHERE u.id = ?";
 
         try (Connection conexao = Conexao.getConexao();
              PreparedStatement ps = conexao.prepareStatement(sql)) {
@@ -160,6 +163,18 @@ public class UsuarioDAO {
         }
     }
 
+    private void preencherStatement(PreparedStatement ps, Usuario usuario) throws SQLException {
+        ps.setString(1, usuario.getNomeUsuario());
+        ps.setString(2, usuario.getCpfCnpj());
+        ps.setString(3, usuario.getEmail());
+
+        if (usuario.getEstadoId() == null) {
+            ps.setNull(4, Types.INTEGER);
+        } else {
+            ps.setInt(4, usuario.getEstadoId());
+        }
+    }
+
     private Usuario mapearUsuario(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
 
@@ -167,6 +182,14 @@ public class UsuarioDAO {
         usuario.setNomeUsuario(rs.getString("nome_usuario"));
         usuario.setCpfCnpj(rs.getString("cpf_cnpj"));
         usuario.setEmail(rs.getString("email"));
+
+        int estadoId = rs.getInt("estado_id");
+        if (!rs.wasNull()) {
+            usuario.setEstadoId(estadoId);
+        }
+
+        usuario.setNomeEstado(rs.getString("nome_estado"));
+        usuario.setSiglaEstado(rs.getString("sigla_estado"));
 
         return usuario;
     }
