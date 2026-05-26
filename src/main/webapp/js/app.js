@@ -1,5 +1,5 @@
 // app.js - Scripts do Sistema de Gestão de Biblioteca
-// Arquivo baseado na proposta das aulas: máscaras e validações no frontend.
+// Arquivo baseado na proposta das aulas: máscaras, validações e comportamentos no frontend.
 
 function somenteNumeros(valor) {
     return (valor || '').replace(/\D/g, '');
@@ -82,7 +82,27 @@ function prepararValidacaoLivro() {
     }
 }
 
+function prepararBuscaInstantanea() {
+    const campoBusca = document.getElementById('buscaInstantanea');
+    const tabela = document.getElementById('tabelaDados');
+
+    if (!campoBusca || !tabela) {
+        return;
+    }
+
+    campoBusca.addEventListener('input', function () {
+        const termo = this.value.toLowerCase().trim();
+        const linhas = tabela.querySelectorAll('tbody tr');
+
+        linhas.forEach(linha => {
+            const textoLinha = linha.innerText.toLowerCase();
+            linha.style.display = textoLinha.includes(termo) ? '' : 'none';
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     prepararValidacaoUsuario();
     prepararValidacaoLivro();
+    prepararBuscaInstantanea();
 });
