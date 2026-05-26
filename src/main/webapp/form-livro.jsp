@@ -10,15 +10,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= editando ? "Editar Livro" : "Novo Livro" %></title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/css/premium.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/livros">📚 Biblioteca Java</a>
+        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">📚 Biblioteca Java</a>
+
         <div class="d-flex gap-2">
             <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
+            <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/usuarios">Usuários</a>
             <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
         </div>
     </div>
@@ -33,7 +39,7 @@
                 <p class="text-muted mb-0">Preencha os dados abaixo. O e-mail é validado no frontend e no backend.</p>
             </div>
 
-            <form action="<%= request.getContextPath() %>/livros/salvar" method="post" class="row g-3">
+            <form id="formLivro" action="<%= request.getContextPath() %>/livros/salvar" method="post" class="row g-3">
                 <% if (editando) { %>
                     <input type="hidden" name="id" value="<%= livro.getId() %>">
                 <% } %>
@@ -84,5 +90,8 @@
         </div>
     </section>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<%= request.getContextPath() %>/js/app.js"></script>
 </body>
 </html>
