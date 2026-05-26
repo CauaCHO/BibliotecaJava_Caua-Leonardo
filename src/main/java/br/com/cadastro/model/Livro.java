@@ -8,23 +8,13 @@ public class Livro {
     private String nomeLivro;
     private String isbn;
     private String autor;
-    private String email;
     private String capaLivro;
     private LocalDate dataPublicacao;
     private BigDecimal valorLivro;
+    private Integer categoriaId;
+    private String nomeCategoria;
 
     public Livro() {
-    }
-
-    public Livro(Integer id, String nomeLivro, String isbn, String autor, String email, String capaLivro, LocalDate dataPublicacao, BigDecimal valorLivro) {
-        this.id = id;
-        this.nomeLivro = nomeLivro;
-        this.isbn = isbn;
-        this.autor = autor;
-        this.email = email;
-        this.capaLivro = capaLivro;
-        this.dataPublicacao = dataPublicacao;
-        this.valorLivro = valorLivro;
     }
 
     public Integer getId() {
@@ -59,14 +49,6 @@ public class Livro {
         this.autor = autor;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getCapaLivro() {
         return capaLivro;
     }
@@ -89,5 +71,21 @@ public class Livro {
 
     public void setValorLivro(BigDecimal valorLivro) {
         this.valorLivro = valorLivro;
+    }
+
+    public Integer getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
     }
 }
