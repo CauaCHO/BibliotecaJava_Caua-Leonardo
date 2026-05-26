@@ -1,6 +1,6 @@
-# 📚 BibliotecaJava - Cadastro de Livros
+# 📚 Biblioteca Java - Sistema de Gestão de Biblioteca
 
-Sistema web desenvolvido em Java utilizando JSP, Servlets e PostgreSQL para gerenciamento de cadastro de livros.
+Sistema web desenvolvido em Java utilizando JSP, Servlets, JDBC e PostgreSQL para gerenciamento de livros, usuários e estados.
 
 Projeto desenvolvido para a disciplina de Programação Java Web.
 
@@ -15,70 +15,239 @@ Projeto desenvolvido para a disciplina de Programação Java Web.
 
 # 🎯 Objetivo do Projeto
 
-Desenvolver uma aplicação Java Web utilizando a arquitetura tradicional baseada em JSP + Servlets, permitindo realizar operações de manutenção de um cadastro de livros.
+Desenvolver uma aplicação Java Web utilizando a arquitetura MVC tradicional baseada em:
 
-O sistema possibilita:
+- JSP
+- Servlets
+- DAO
+- JDBC
+- PostgreSQL
+
+O sistema permite o gerenciamento completo de:
+
+- 📚 Livros
+- 👤 Usuários
+- 🌎 Estados
+
+---
+
+# 🚀 Funcionalidades
+
+## 📚 Livros
 
 - Cadastro de livros
-- Edição de informações
-- Exclusão de registros
-- Visualização da lista de livros cadastrados
+- Edição de livros
+- Exclusão de livros
+- Busca instantânea
+- Preview de capa
+- Capas personalizadas
+- Fallback automático de imagem
+- Validação de e-mail
+- Dashboard com indicadores
 
-Além disso, o projeto foi desenvolvido com foco em:
+## 👤 Usuários
 
-- Organização em camadas
-- Integração com banco de dados PostgreSQL
-- Interface responsiva
-- Estrutura baseada em DAO
+- Cadastro de usuários
+- CRUD completo
+- Validação de CPF/CNPJ
+- Validação de e-mail
+- Busca instantânea
 
----
+## 🌎 Estados
 
-# 📖 Classe Livro
-
-A entidade `Livro` representa os dados principais do sistema.
-
-## Atributos da classe
-
-| Campo | Tipo | Descrição |
-|------|------|-----------|
-| id | Integer | Identificador único |
-| nomeLivro | String | Nome do livro |
-| isbn | String | Código ISBN |
-| autor | String | Nome do autor |
-| dataPublicacao | Date | Data de publicação |
-| valorLivro | BigDecimal | Valor do livro |
+- Cadastro de estados
+- CRUD completo
+- Controle de duplicidade da sigla
+- Validação frontend/backend
 
 ---
 
-# ⚙️ Funcionalidades do Sistema
+# 🎨 Interface
 
-✅ Listagem de livros cadastrados  
-✅ Cadastro de novos livros  
-✅ Alteração de livros existentes  
-✅ Exclusão de livros  
-✅ Interface responsiva para desktop e dispositivos móveis  
-✅ Integração com PostgreSQL via JDBC  
+O sistema possui:
+
+- Dashboard administrativo
+- Sidebar moderna
+- Dark mode
+- Bootstrap 5
+- Bootstrap Icons
+- Layout responsivo
+- Cards administrativos
+- Paginação visual
+- Busca instantânea em JavaScript
+- Visual premium para tabelas e formulários
 
 ---
 
 # 🛠️ Tecnologias Utilizadas
 
-| Tecnologia | Finalidade |
-|------------|------------|
+| Tecnologia | Utilização |
+|---|---|
 | Java 17 | Linguagem principal |
-| JSP | Renderização das páginas |
-| Servlets Jakarta | Controle das requisições |
-| JDBC | Comunicação com banco de dados |
-| PostgreSQL | Banco de dados relacional |
+| JSP | Interface |
+| Servlets (`javax.servlet`) | Controle |
+| JDBC | Persistência |
+| PostgreSQL | Banco de dados |
 | Maven | Gerenciamento de dependências |
-| Bootstrap 5 | Estilização e responsividade |
-| Apache Tomcat 10 | Servidor de aplicação |
+| Bootstrap 5 | Interface responsiva |
+| Bootstrap Icons | Ícones |
+| Apache Tomcat 9 | Servidor |
 
 ---
 
-# 🧱 Arquitetura Utilizada
-
-O projeto foi estruturado seguindo o padrão:
+# 🧱 Arquitetura do Projeto
 
 ```text
 Model → DAO → Servlet → JSP
+```
+
+---
+
+# 📂 Estrutura do Projeto
+
+```text
+src/main/java/br/com/cadastro
+├── dao
+├── model
+├── servlet
+└── util
+
+src/main/webapp
+├── css
+├── js
+├── WEB-INF
+├── dashboard.jsp
+├── lista-livros.jsp
+├── lista-usuarios.jsp
+├── lista-estados.jsp
+├── form-livro.jsp
+├── form-usuario.jsp
+└── form-estado.jsp
+```
+
+---
+
+# 🗄️ Banco de Dados
+
+O arquivo:
+
+```text
+database/script.sql
+```
+
+já contém:
+
+- criação do banco
+- criação das tabelas
+- constraints
+- migrações seguras
+- dados iniciais
+- compatibilidade com versões antigas do projeto
+
+## ✅ Basta executar o arquivo completo
+
+---
+
+# ⚙️ Configuração do Banco
+
+Por padrão:
+
+```text
+Banco: biblioteca
+Usuário: postgres
+Senha: postgres
+```
+
+Caso necessário, altere:
+
+```text
+src/main/java/br/com/cadastro/util/Conexao.java
+```
+
+---
+
+# 🚀 Como Executar o Projeto
+
+## 1️⃣ Executar o banco
+
+Execute:
+
+```text
+database/script.sql
+```
+
+no PostgreSQL.
+
+---
+
+## 2️⃣ Executar o setup automático
+
+Execute:
+
+```text
+setup_e_rodar.bat
+```
+
+O script:
+
+- verifica Java
+- verifica Maven
+- baixa Tomcat 9
+- gera WAR
+- faz deploy
+- inicia servidor
+- abre navegador automaticamente
+
+---
+
+# 🌐 Acesso do Sistema
+
+```text
+http://localhost:8080/BibliotecaJava_Caua-Leonardo/livros
+```
+
+---
+
+# 🔐 Tomcat Manager
+
+```text
+Usuário: admin
+Senha: admin
+```
+
+---
+
+# 📌 Requisitos
+
+- Java JDK 17
+- Maven
+- PostgreSQL
+- Windows
+
+---
+
+# 🧠 Padrões Utilizados
+
+- MVC
+- DAO
+- JDBC
+- Responsividade
+- Validações frontend/backend
+
+---
+
+# 📷 Recursos Visuais
+
+- Dashboard premium
+- Dark mode
+- Sidebar administrativa
+- Busca dinâmica
+- Capas de livros
+- Preview automático de capa
+- Cards administrativos
+
+---
+
+# 📄 Licença
+
+Projeto acadêmico desenvolvido para fins educacionais.
