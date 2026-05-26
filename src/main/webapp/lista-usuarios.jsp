@@ -26,9 +26,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
     <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">
-            📚 Biblioteca Java
-        </a>
+        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">📚 Biblioteca Java</a>
 
         <div class="d-flex gap-2 flex-wrap">
             <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
@@ -48,8 +46,7 @@
                 <p class="text-muted mb-0">Controle de usuários do sistema de biblioteca.</p>
             </div>
 
-            <a href="<%= request.getContextPath() %>/usuarios/novo"
-               class="btn btn-primary btn-rounded px-4">
+            <a href="<%= request.getContextPath() %>/usuarios/novo" class="btn btn-primary btn-rounded px-4">
                 <i class="bi bi-plus-lg"></i>
                 Novo Usuário
             </a>
@@ -70,10 +67,14 @@
         </div>
     <% } %>
 
+    <div class="mb-3">
+        <input id="buscaInstantanea" type="text" class="form-control" placeholder="Buscar usuário por nome, CPF/CNPJ ou e-mail...">
+    </div>
+
     <section class="card table-card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table id="tabelaDados" class="table table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
                         <th>ID</th>
@@ -86,32 +87,18 @@
 
                     <tbody>
                     <% if (usuarios == null || usuarios.isEmpty()) { %>
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">
-                                Nenhum usuário cadastrado.
-                            </td>
-                        </tr>
+                        <tr><td colspan="5" class="text-center py-4 text-muted">Nenhum usuário cadastrado.</td></tr>
                     <% } else { %>
-
                         <% for (Usuario usuario : usuarios) { %>
                             <tr>
                                 <td><%= usuario.getId() %></td>
                                 <td class="fw-semibold"><%= usuario.getNomeUsuario() %></td>
                                 <td><%= usuario.getCpfCnpj() %></td>
                                 <td><%= usuario.getEmail() %></td>
-
                                 <td>
                                     <div class="action-buttons justify-content-end">
-                                        <a class="btn btn-sm btn-outline-primary"
-                                           href="<%= request.getContextPath() %>/usuarios/editar?id=<%= usuario.getId() %>">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <a class="btn btn-sm btn-outline-danger"
-                                           href="<%= request.getContextPath() %>/usuarios/excluir?id=<%= usuario.getId() %>"
-                                           onclick="return confirm('Deseja realmente excluir este usuário?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/usuarios/editar?id=<%= usuario.getId() %>"><i class="bi bi-pencil"></i></a>
+                                        <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/usuarios/excluir?id=<%= usuario.getId() %>" onclick="return confirm('Deseja realmente excluir este usuário?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -125,5 +112,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<%= request.getContextPath() %>/js/app.js"></script>
 </body>
 </html>
