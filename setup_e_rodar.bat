@@ -27,7 +27,7 @@ if errorlevel 1 (
 
 echo.
 echo [2/8] Verificando Maven...
-mvn -version
+call mvn -version
 if errorlevel 1 (
     echo.
     echo ERRO: Maven nao encontrado no PATH.
@@ -41,7 +41,7 @@ echo [3/8] Preparando Apache Tomcat %TOMCAT_VERSION%...
 if not exist "%TOMCAT_DIR%" (
     echo Tomcat nao encontrado em %TOMCAT_DIR%.
     echo Baixando Tomcat %TOMCAT_VERSION%...
-    powershell -Command "Invoke-WebRequest -Uri '%TOMCAT_URL%' -OutFile '%TOMCAT_ZIP%'"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri '%TOMCAT_URL%' -OutFile '%TOMCAT_ZIP%'"
 
     if errorlevel 1 (
         echo ERRO ao baixar o Tomcat.
@@ -50,7 +50,13 @@ if not exist "%TOMCAT_DIR%" (
     )
 
     echo Extraindo em C:\ ...
-    powershell -Command "Expand-Archive -Path '%TOMCAT_ZIP%' -DestinationPath 'C:\' -Force"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -Path '%TOMCAT_ZIP%' -DestinationPath 'C:\' -Force"
+
+    if errorlevel 1 (
+        echo ERRO ao extrair o Tomcat.
+        pause
+        exit /b 1
+    )
 ) else (
     echo Tomcat ja encontrado em %TOMCAT_DIR%.
 )
