@@ -9,18 +9,20 @@ public class Livro {
     private String isbn;
     private String autor;
     private String email;
+    private String capaLivro;
     private LocalDate dataPublicacao;
     private BigDecimal valorLivro;
 
     public Livro() {
     }
 
-    public Livro(Integer id, String nomeLivro, String isbn, String autor, String email, LocalDate dataPublicacao, BigDecimal valorLivro) {
+    public Livro(Integer id, String nomeLivro, String isbn, String autor, String email, String capaLivro, LocalDate dataPublicacao, BigDecimal valorLivro) {
         this.id = id;
         this.nomeLivro = nomeLivro;
         this.isbn = isbn;
         this.autor = autor;
         this.email = email;
+        this.capaLivro = capaLivro;
         this.dataPublicacao = dataPublicacao;
         this.valorLivro = valorLivro;
     }
@@ -63,6 +65,14 @@ public class Livro {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCapaLivro() {
+        return capaLivro;
+    }
+
+    public void setCapaLivro(String capaLivro) {
+        this.capaLivro = capaLivro;
     }
 
     public LocalDate getDataPublicacao() {
