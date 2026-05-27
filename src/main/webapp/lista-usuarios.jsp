@@ -43,7 +43,7 @@
             <div>
                 <span class="badge badge-soft mb-2">Gerenciamento</span>
                 <h1 class="h3 fw-bold mb-1">Cadastro de Usuários</h1>
-                <p class="text-muted mb-0">Controle de usuários do sistema de biblioteca.</p>
+                <p class="text-muted mb-0">Usuários conectados aos estados cadastrados no sistema.</p>
             </div>
 
             <a href="<%= request.getContextPath() %>/usuarios/novo" class="btn btn-primary btn-rounded px-4">
@@ -68,7 +68,7 @@
     <% } %>
 
     <div class="mb-3">
-        <input id="buscaInstantanea" type="text" class="form-control" placeholder="Buscar usuário por nome, CPF/CNPJ ou e-mail...">
+        <input id="buscaInstantanea" type="text" class="form-control" placeholder="Buscar usuário por nome, CPF/CNPJ, e-mail ou estado...">
     </div>
 
     <section class="card table-card">
@@ -81,13 +81,14 @@
                         <th>Nome</th>
                         <th>CPF/CNPJ</th>
                         <th>E-mail</th>
+                        <th>Estado</th>
                         <th class="text-end">Ações</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     <% if (usuarios == null || usuarios.isEmpty()) { %>
-                        <tr><td colspan="5" class="text-center py-4 text-muted">Nenhum usuário cadastrado.</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 text-muted">Nenhum usuário cadastrado.</td></tr>
                     <% } else { %>
                         <% for (Usuario usuario : usuarios) { %>
                             <tr>
@@ -95,10 +96,28 @@
                                 <td class="fw-semibold"><%= usuario.getNomeUsuario() %></td>
                                 <td><%= usuario.getCpfCnpj() %></td>
                                 <td><%= usuario.getEmail() %></td>
+
+                                <td>
+                                    <% if (usuario.getNomeEstado() != null) { %>
+                                        <span class="badge text-bg-primary">
+                                            <%= usuario.getNomeEstado() %> - <%= usuario.getSiglaEstado() %>
+                                        </span>
+                                    <% } else { %>
+                                        <span class="badge text-bg-secondary">Sem estado</span>
+                                    <% } %>
+                                </td>
+
                                 <td>
                                     <div class="action-buttons justify-content-end">
-                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/usuarios/editar?id=<%= usuario.getId() %>"><i class="bi bi-pencil"></i></a>
-                                        <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/usuarios/excluir?id=<%= usuario.getId() %>" onclick="return confirm('Deseja realmente excluir este usuário?')"><i class="bi bi-trash"></i></a>
+                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/usuarios/editar?id=<%= usuario.getId() %>">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           href="<%= request.getContextPath() %>/usuarios/excluir?id=<%= usuario.getId() %>"
+                                           onclick="return confirm('Deseja realmente excluir este usuário?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
