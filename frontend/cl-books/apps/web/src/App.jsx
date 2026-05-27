@@ -1,9 +1,11 @@
 import React from 'react';
+import HomePage from '@/pages/HomePage.jsx';
+import { CartProvider } from '@/hooks/useCart.jsx';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <h1>CL Book's</h1>
-    </div>
+    <CartProvider>
+      <HomePage />
+    </CartProvider>
   );
 }
