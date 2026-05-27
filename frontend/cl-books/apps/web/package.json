@@ -1,1 +1,29 @@
-{"name":"cl-books-web","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"vite --host 0.0.0.0 --port 3000","build":"vite build --outDir ../../dist/apps/web","preview":"vite preview --outDir ../../dist/apps/web --host 0.0.0.0 --port 3000"},"dependencies":{"@vitejs/plugin-react":"^5.1.4","vite":"^7.3.1","react":"^18.3.1","react-dom":"^18.3.1","react-router-dom":"^7.13.0","framer-motion":"^11.15.0","lucide-react":"^0.469.0"},"devDependencies":{}}
+{
+  "name": "cl-books-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "vite build --outDir ../../dist/apps/web",
+    "preview": "vite preview --outDir ../../dist/apps/web --host 0.0.0.0 --port 3000"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "vite": "^7.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
+    "react-helmet": "^6.1.0",
+    "recharts": "^2.15.4",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20"
+  }
+}
