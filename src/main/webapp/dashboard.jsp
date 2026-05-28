@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.Map" %>
+<%
+    Map<String, Integer> metricas = (Map<String, Integer>) request.getAttribute("metricas");
+%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -24,7 +28,7 @@
             </div>
 
             <nav class="sidebar-nav mt-4">
-                <a href="<%= request.getContextPath() %>/dashboard.jsp" class="active">
+                <a href="<%= request.getContextPath() %>/dashboard" class="active">
                     <i class="bi bi-speedometer2"></i>
                     Dashboard
                 </a>
@@ -51,6 +55,48 @@
                 Explorar catálogo
             </a>
         </section>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="dashboard-card dashboard-blue">
+                    <div>
+                        <span class="dashboard-label">Livros</span>
+                        <h2><%= metricas != null ? metricas.get("livros") : 0 %></h2>
+                    </div>
+                    <i class="bi bi-book dashboard-icon"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dashboard-card dashboard-green">
+                    <div>
+                        <span class="dashboard-label">Usuários</span>
+                        <h2><%= metricas != null ? metricas.get("usuarios") : 0 %></h2>
+                    </div>
+                    <i class="bi bi-people dashboard-icon"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dashboard-card dashboard-purple">
+                    <div>
+                        <span class="dashboard-label">Empréstimos</span>
+                        <h2><%= metricas != null ? metricas.get("emprestimosAtivos") : 0 %></h2>
+                    </div>
+                    <i class="bi bi-arrow-repeat dashboard-icon"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dashboard-card dashboard-orange">
+                    <div>
+                        <span class="dashboard-label">Avaliações</span>
+                        <h2><%= metricas != null ? metricas.get("avaliacoes") : 0 %></h2>
+                    </div>
+                    <i class="bi bi-star dashboard-icon"></i>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 
