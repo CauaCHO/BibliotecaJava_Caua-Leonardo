@@ -10,112 +10,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estados - Biblioteca Java</title>
+    <title>Estados - CL Book's</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/css/premium.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
-    <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/livros">📚 Biblioteca Java</a>
 
-        <div class="d-flex gap-2">
-            <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
-            <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
-        </div>
-    </div>
-</nav>
+<jsp:include page="/includes/navbar.jsp" />
 
-<main class="container py-4">
+<main class="container-fluid px-4 px-lg-5 py-5">
 
-    <section class="hero-card card border-0 shadow-sm mb-4">
-        <div class="card-body p-4 d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-            <div>
-                <span class="badge text-bg-primary mb-2">Gerenciamento</span>
-                <h1 class="h3 fw-bold mb-1">Estados Cadastrados</h1>
-                <p class="text-muted mb-0">Cadastro e manutenção de estados do sistema.</p>
+    <section class="hero-card p-5 mb-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-8">
+                <span class="badge badge-soft mb-3">Regiões & Localização</span>
+                <h1 class="display-4 fw-bold mb-3">Gerencie estados da plataforma.</h1>
+                <p class="text-muted fs-5 mb-4">Sistema premium para organização geográfica do ecossistema literário.</p>
+
+                <a href="<%= request.getContextPath() %>/estados/novo" class="btn btn-primary btn-lg btn-rounded px-4">
+                    Novo Estado
+                </a>
             </div>
 
-            <div class="text-lg-end">
-                <div class="small text-muted">Total de estados</div>
-                <div class="display-6 fw-bold"><%= totalEstados != null ? totalEstados : 0 %></div>
+            <div class="col-lg-4">
+                <div class="chart-glow-card text-center p-5">
+                    <i class="bi bi-geo-alt-fill" style="font-size: 5rem; color: #F59E0B"></i>
+                </div>
             </div>
         </div>
     </section>
 
-    <div class="d-flex justify-content-end mb-3">
-        <a href="<%= request.getContextPath() %>/estados/novo" class="btn btn-primary btn-rounded px-4">
-            ➕ Novo Estado
-        </a>
-    </div>
+    <section class="table-card p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Estados cadastrados</h2>
+                <p class="text-muted mb-0">Base geográfica da plataforma.</p>
+            </div>
 
-    <% if (request.getAttribute("mensagemErro") != null) { %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= request.getAttribute("mensagemErro") %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <span class="badge text-bg-primary px-3 py-2 fs-6">
+                <%= totalEstados != null ? totalEstados : 0 %> estados
+            </span>
         </div>
-    <% } %>
 
-    <% if (session.getAttribute("mensagemSucesso") != null) { %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%= session.getAttribute("mensagemSucesso") %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <% session.removeAttribute("mensagemSucesso"); %>
-    <% } %>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Estado</th>
+                    <th>Sigla</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+                </thead>
 
-    <section class="card border-0 shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <tbody>
+                <% if (estados != null && !estados.isEmpty()) {
+                    for (Estado estado : estados) { %>
+
                     <tr>
-                        <th>ID</th>
-                        <th>Estado</th>
-                        <th>Sigla</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <% if (estados != null && !estados.isEmpty()) {
-                        for (Estado estado : estados) { %>
-
-                        <tr>
-                            <td><%= estado.getId() %></td>
-                            <td class="fw-semibold"><%= estado.getNomeEstado() %></td>
-                            <td>
-                                <span class="badge text-bg-primary">
-                                    <%= estado.getSiglaEstado() %>
-                                </span>
-                            </td>
-                            <td class="text-end">
+                        <td><%= estado.getId() %></td>
+                        <td class="fw-semibold"><%= estado.getNomeEstado() %></td>
+                        <td>
+                            <span class="badge text-bg-primary px-3 py-2">
+                                <%= estado.getSiglaEstado() %>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons justify-content-end">
                                 <a href="<%= request.getContextPath() %>/estados/editar?id=<%= estado.getId() %>"
-                                   class="btn btn-sm btn-outline-primary btn-rounded">
-                                    ✏️ Editar
+                                   class="btn btn-sm btn-outline-light rounded-pill">
+                                    <i class="bi bi-pencil"></i>
                                 </a>
 
                                 <a href="<%= request.getContextPath() %>/estados/excluir?id=<%= estado.getId() %>"
-                                   class="btn btn-sm btn-outline-danger btn-rounded"
+                                   class="btn btn-sm btn-outline-danger rounded-pill"
                                    onclick="return confirm('Deseja realmente excluir este estado?');">
-                                    🗑️ Excluir
+                                    <i class="bi bi-trash"></i>
                                 </a>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
 
-                    <% }
-                    } else { %>
-
-                        <tr>
-                            <td colspan="4" class="text-center py-4 text-muted">
-                                Nenhum estado cadastrado.
-                            </td>
-                        </tr>
-
-                    <% } %>
-                    </tbody>
-                </table>
-            </div>
+                <% }
+                } else { %>
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            Nenhum estado cadastrado.
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
         </div>
     </section>
 </main>
