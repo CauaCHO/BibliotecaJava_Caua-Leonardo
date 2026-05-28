@@ -7,6 +7,7 @@
     --premium-amber: #F59E0B;
     --premium-blue: #3B82F6;
     --premium-purple: #8B5CF6;
+    --premium-green: #22C55E;
     --premium-text: #F8FAFC;
     --premium-muted: #94A3B8;
     --premium-border: rgba(255, 255, 255, 0.10);
@@ -24,7 +25,11 @@ body {
     min-height: 100vh;
     font-family: 'DM Sans', system-ui, sans-serif;
     color: var(--premium-text);
-    background: radial-gradient(circle at 8% 10%, rgba(139, 92, 246, 0.25), transparent 30%), radial-gradient(circle at 92% 8%, rgba(245, 158, 11, 0.18), transparent 28%), var(--premium-bg);
+    background:
+        radial-gradient(circle at 8% 10%, rgba(139, 92, 246, 0.25), transparent 30%),
+        radial-gradient(circle at 92% 8%, rgba(245, 158, 11, 0.18), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(59, 130, 246, 0.16), transparent 28%),
+        var(--premium-bg);
     animation: pageFadeIn 0.45s ease both;
 }
 
@@ -34,7 +39,8 @@ body {
 }
 
 .navbar-custom,
-.app-navbar {
+.app-navbar,
+.premium-navbar {
     position: sticky;
     top: 0;
     z-index: 1030;
@@ -44,9 +50,25 @@ body {
     box-shadow: 0 16px 60px rgba(0, 0, 0, 0.22) !important;
 }
 
-.navbar-brand {
+.navbar-brand,
+.premium-brand {
     font-weight: 900 !important;
     letter-spacing: -0.03em;
+}
+
+.navbar-brand span,
+.premium-brand span {
+    color: var(--premium-amber);
+}
+
+.nav-link {
+    color: rgba(255,255,255,.78) !important;
+    transition: .25s ease;
+}
+
+.nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
 }
 
 .btn-rounded,
@@ -69,11 +91,13 @@ body {
 .btn-primary:hover,
 .btn-light:hover,
 .btn-outline-light:hover,
-.btn-outline-primary:hover {
-    transform: translateY(-2px);
+.btn-outline-primary:hover,
+.btn-outline-danger:hover {
+    transform: translateY(-2px) scale(1.02);
 }
 
 main.container,
+main.container-fluid,
 .dashboard-content {
     animation: pageSlideUp 0.48s ease both;
 }
@@ -81,32 +105,34 @@ main.container,
 .metric-card,
 .hero-card,
 .table-card,
-.card {
+.card,
+.dashboard-card,
+.book-card,
+.book-card-premium,
+.chart-glow-card {
     color: var(--premium-text);
     background: linear-gradient(180deg, rgba(255,255,255,0.105), rgba(255,255,255,0.045)) !important;
     border: 1px solid var(--premium-border) !important;
     border-radius: 28px !important;
     box-shadow: 0 26px 90px rgba(0, 0, 0, 0.26) !important;
     backdrop-filter: blur(18px);
-}
-
-.metric-card,
-.hero-card,
-.table-card {
-    transition: 0.25s ease;
-}
-
-.metric-card {
-    padding: 24px;
-    min-height: 132px;
+    transition: .28s ease;
 }
 
 .metric-card:hover,
 .hero-card:hover,
 .table-card:hover,
-.card:hover {
-    transform: translateY(-5px);
+.card:hover,
+.dashboard-card:hover,
+.book-card:hover,
+.book-card-premium:hover {
+    transform: translateY(-6px) rotateX(2deg);
     border-color: rgba(245, 158, 11, 0.36) !important;
+}
+
+.metric-card {
+    padding: 24px;
+    min-height: 132px;
 }
 
 .metric-value {
@@ -159,6 +185,155 @@ main.container,
     letter-spacing: -0.05em;
 }
 
+.dashboard-blue::before,
+.dashboard-green::before,
+.dashboard-purple::before,
+.dashboard-orange::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .16;
+}
+
+.dashboard-blue::before { background: var(--premium-blue); }
+.dashboard-green::before { background: var(--premium-green); }
+.dashboard-purple::before { background: var(--premium-purple); }
+.dashboard-orange::before { background: var(--premium-amber); }
+
+.dashboard-icon {
+    font-size: 3rem;
+}
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.8rem;
+}
+
+.book-cover-large {
+    height: 360px;
+    overflow: hidden;
+}
+
+.book-cover-large img,
+.book-preview-premium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-content {
+    padding: 1.5rem;
+}
+
+.book-category {
+    background: rgba(59,130,246,.16);
+    color: #93C5FD;
+    border-radius: 999px;
+    padding: .4rem .8rem;
+    font-size: .85rem;
+}
+
+.book-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #FCD34D;
+}
+
+.catalog-floating-books {
+    position: relative;
+    height: 320px;
+}
+
+.floating-book {
+    position: absolute;
+    width: 150px;
+    height: 220px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.08);
+    animation: floating 5s ease-in-out infinite;
+}
+
+.glow-orange {
+    left: 10%;
+    top: 20%;
+    box-shadow: 0 0 45px rgba(245,158,11,.28);
+}
+
+.glow-purple {
+    left: 38%;
+    top: 0;
+    box-shadow: 0 0 45px rgba(139,92,246,.28);
+}
+
+.glow-blue {
+    right: 8%;
+    top: 18%;
+    box-shadow: 0 0 45px rgba(59,130,246,.28);
+}
+
+.search-premium {
+    max-width: 420px;
+}
+
+.book-preview-premium {
+    width: 320px;
+    height: 460px;
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(245,158,11,.22);
+}
+
+.book-preview-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent, rgba(245,158,11,.12));
+}
+
+.action-buttons {
+    display: flex;
+    gap: .5rem;
+}
+
+.form-control,
+.form-select {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    color: white;
+    padding: .95rem 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: rgba(255,255,255,.05);
+    color: white;
+    border-color: rgba(245,158,11,.5);
+    box-shadow: 0 0 0 .2rem rgba(245,158,11,.12);
+}
+
+.table {
+    color: white;
+}
+
+.table thead th {
+    border-color: rgba(255,255,255,.06);
+}
+
+.table tbody td {
+    border-color: rgba(255,255,255,.04);
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(255,255,255,.03);
+}
+
+@keyframes floating {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
 @keyframes pageFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -167,4 +342,25 @@ main.container,
 @keyframes pageSlideUp {
     from { opacity: 0; transform: translateY(18px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 991px) {
+    .display-3,
+    .display-4 {
+        font-size: 2.4rem;
+    }
+
+    .catalog-floating-books {
+        height: 220px;
+    }
+
+    .floating-book {
+        width: 100px;
+        height: 160px;
+    }
+
+    .book-preview-premium {
+        width: 260px;
+        height: 380px;
+    }
 }
