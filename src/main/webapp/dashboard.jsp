@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Biblioteca Java</title>
+    <title>Dashboard Premium - CL Book's</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -19,8 +19,8 @@
     <aside class="sidebar shadow-lg">
         <div>
             <div class="sidebar-brand">
-                <h2>📚 Biblioteca</h2>
-                <span>Java Web System</span>
+                <h2>📚 CL Book's</h2>
+                <span>Premium Java Platform</span>
             </div>
 
             <nav class="sidebar-nav mt-4">
@@ -33,112 +33,26 @@
                     <i class="bi bi-book"></i>
                     Livros
                 </a>
-
-                <a href="<%= request.getContextPath() %>/usuarios">
-                    <i class="bi bi-people"></i>
-                    Usuários
-                </a>
-
-                <a href="<%= request.getContextPath() %>/estados">
-                    <i class="bi bi-globe-americas"></i>
-                    Estados
-                </a>
             </nav>
         </div>
-
-        <button class="btn btn-outline-light w-100 mt-4" id="toggleDarkMode" type="button">
-            <i class="bi bi-moon-stars"></i>
-            Dark Mode
-        </button>
     </aside>
 
     <main class="dashboard-content">
+        <section class="hero-card p-5 mb-4">
+            <h1 class="display-4 fw-bold mb-3">
+                Plataforma literária premium.
+            </h1>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-            <div>
-                <h1 class="fw-bold mb-1">Dashboard</h1>
-                <p class="text-muted mb-0">Sistema de Gestão de Biblioteca em Java Web</p>
-            </div>
-
-            <div class="badge text-bg-primary fs-6 px-3 py-2 shadow-sm">
-                Java + JSP + Servlet + PostgreSQL
-            </div>
-        </div>
-
-        <div class="row g-4 mb-4">
-
-            <div class="col-md-4">
-                <a class="text-decoration-none" href="<%= request.getContextPath() %>/livros">
-                    <div class="dashboard-card dashboard-blue">
-                        <div>
-                            <span class="dashboard-label">Livros</span>
-                            <h2>CRUD</h2>
-                            <small>Cadastro, alteração e exclusão</small>
-                        </div>
-
-                        <i class="bi bi-book-half dashboard-icon"></i>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a class="text-decoration-none" href="<%= request.getContextPath() %>/usuarios">
-                    <div class="dashboard-card dashboard-green">
-                        <div>
-                            <span class="dashboard-label">Usuários</span>
-                            <h2>Cadastro</h2>
-                            <small>CPF/CNPJ, e-mail e validações</small>
-                        </div>
-
-                        <i class="bi bi-people-fill dashboard-icon"></i>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a class="text-decoration-none" href="<%= request.getContextPath() %>/estados">
-                    <div class="dashboard-card dashboard-purple">
-                        <div>
-                            <span class="dashboard-label">Estados</span>
-                            <h2>Gerenciamento</h2>
-                            <small>Sigla única e validações</small>
-                        </div>
-
-                        <i class="bi bi-globe dashboard-icon"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <section class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-            <h3 class="fw-bold mb-3">📌 Sobre o Projeto</h3>
-
-            <p class="text-muted mb-0">
-                Projeto desenvolvido seguindo o padrão Java Web tradicional com JSP, Servlets, DAO, JDBC e PostgreSQL.
-                O sistema possui gerenciamento de livros, usuários e estados, além de validações frontend/backend,
-                dashboard administrativa e estrutura MVC baseada nas aulas da disciplina.
+            <p class="text-muted fs-5 mb-4">
+                Sistema Java Web modernizado com visual cinematográfico.
             </p>
-        </section>
 
-        <section class="card border-0 shadow-sm rounded-4 p-4">
-            <h3 class="fw-bold mb-3">✅ Recursos Implementados</h3>
-
-            <div class="row g-3">
-                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">JSP</span></div>
-                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">Servlet</span></div>
-                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">DAO</span></div>
-                <div class="col-md-3"><span class="badge text-bg-light w-100 p-3">PostgreSQL</span></div>
-            </div>
+            <a href="<%= request.getContextPath() %>/livros" class="btn btn-primary btn-lg px-4">
+                Explorar catálogo
+            </a>
         </section>
     </main>
 </div>
-
-<script>
-    const toggle = document.getElementById('toggleDarkMode');
-    toggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-    });
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
