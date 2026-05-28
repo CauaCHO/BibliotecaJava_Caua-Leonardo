@@ -1,5 +1,4 @@
-// app.js - Scripts do Sistema de Gestão de Biblioteca
-// Arquivo baseado na proposta das aulas: máscaras, validações e comportamentos no frontend.
+// app.js - Sistema Premium CL Book's
 
 function somenteNumeros(valor) {
     return (valor || '').replace(/\D/g, '');
@@ -43,23 +42,21 @@ function prepararValidacaoUsuario() {
         form.addEventListener('submit', function (event) {
             if (cpfCnpj && somenteNumeros(cpfCnpj.value).length < 11) {
                 event.preventDefault();
-                alert('CPF/CNPJ inválido. Informe ao menos 11 números.');
+                alert('CPF/CNPJ inválido.');
                 cpfCnpj.focus();
                 return;
             }
 
             if (email && !validarEmailFormato(email.value)) {
                 event.preventDefault();
-                alert('E-mail inválido. Verifique o formato informado.');
+                alert('E-mail inválido.');
                 email.focus();
-                return;
             }
         });
     }
 }
 
 function prepararValidacaoLivro() {
-    const email = document.getElementById('email');
     const valorLivro = document.getElementById('valorLivro');
     const form = document.getElementById('formLivro');
 
@@ -72,31 +69,97 @@ function prepararValidacaoLivro() {
     }
 
     if (form) {
-        form.addEventListener('submit', function (event) {
-            if (email && !validarEmailFormato(email.value)) {
-                event.preventDefault();
-                alert('E-mail inválido. Verifique o formato informado.');
-                email.focus();
-            }
-        });
+        const inputCapa = document.getElementById('capaLivro');
+        const previewCapa = document.getElementById('previewCapaLivro');
+
+        if (inputCapa && previewCapa) {
+            inputCapa.addEventListener('input', () => {
+                const url = inputCapa.value.trim();
+
+                if (url.length > 8) {
+                    previewCapa.src = url;
+                }
+            });
+        }
     }
 }
 
 function prepararBuscaInstantanea() {
     const campoBusca = document.getElementById('buscaInstantanea');
-    const tabela = document.getElementById('tabelaDados');
 
-    if (!campoBusca || !tabela) {
+    if (!campoBusca) {
         return;
     }
 
     campoBusca.addEventListener('input', function () {
         const termo = this.value.toLowerCase().trim();
-        const linhas = tabela.querySelectorAll('tbody tr');
 
-        linhas.forEach(linha => {
-            const textoLinha = linha.innerText.toLowerCase();
-            linha.style.display = textoLinha.includes(termo) ? '' : 'none';
+        document.querySelectorAll('.item-busca').forEach(item => {
+            const texto = item.innerText.toLowerCase();
+
+            if (texto.includes(termo)) {
+                item.style.display = '';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0px)';
+            } else {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(10px)';
+
+                setTimeout(() => {
+                    item.style.display = 'none';
+                }, 180);
+            }
+        });
+
+        document.querySelectorAll('.item-busca').forEach(item => {
+            const texto = item.innerText.toLowerCase();
+
+            if (texto.includes(termo)) {
+                setTimeout(() => {
+                    item.style.display = '';
+                }, 10);
+            }
+        });
+    });
+}
+
+function prepararAnimacoesPremium() {
+
+    const animatedItems = document.querySelectorAll(
+        '.dashboard-card, .book-card, .hero-card, .table-card, .book-card-premium'
+    );
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-visible');
+            }
+        });
+    }, {
+        threshold: 0.08
+    });
+
+    animatedItems.forEach(item => {
+        item.classList.add('fade-in-hidden');
+        observer.observe(item);
+    });
+
+    document.querySelectorAll('.book-card, .dashboard-card').forEach(card => {
+
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const rotateY = ((x / rect.width) - 0.5) * 10;
+            const rotateX = ((y / rect.height) - 0.5) * -10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
         });
     });
 }
@@ -105,4 +168,5 @@ document.addEventListener('DOMContentLoaded', function () {
     prepararValidacaoUsuario();
     prepararValidacaoLivro();
     prepararBuscaInstantanea();
+    prepararAnimacoesPremium();
 });
