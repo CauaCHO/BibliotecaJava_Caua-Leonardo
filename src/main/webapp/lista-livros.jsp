@@ -16,7 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca Java - Livros</title>
+    <title>CL Book's - Catálogo</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -27,10 +27,10 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
     <div class="container py-2 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">📚 Biblioteca Java</a>
+        <a class="navbar-brand fw-bold" href="<%= request.getContextPath() %>/dashboard.jsp">📚 CL Book's</a>
 
         <div class="d-flex gap-2 flex-wrap">
-            <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Livros</a>
+            <a class="btn btn-sm btn-light btn-rounded" href="<%= request.getContextPath() %>/livros">Catálogo</a>
             <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/usuarios">Usuários</a>
             <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/estados">Estados</a>
         </div>
@@ -39,56 +39,22 @@
 
 <main class="container py-4">
 
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-4">
-            <div class="metric-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Total de Livros</p>
-                        <h2 class="metric-value mb-0"><%= totalLivros != null ? totalLivros : 0 %></h2>
-                    </div>
-                    <div class="book-cover"><i class="bi bi-book"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="metric-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Sistema</p>
-                        <h2 class="metric-value mb-0">Java Web</h2>
-                    </div>
-                    <div class="book-cover"><i class="bi bi-code-slash"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
-            <div class="metric-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Banco de Dados</p>
-                        <h2 class="metric-value mb-0">PostgreSQL</h2>
-                    </div>
-                    <div class="book-cover"><i class="bi bi-database"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section class="card hero-card mb-4">
-        <div class="card-body p-4 d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center">
+    <section class="hero-card mb-4">
+        <div class="card-body p-4 p-lg-5 d-flex flex-column flex-lg-row justify-content-between gap-4 align-items-lg-center">
             <div>
-                <span class="badge badge-soft mb-2">Sistema de Gestão de Biblioteca</span>
-                <h1 class="h3 fw-bold mb-1">Cadastro de Livros</h1>
-                <p class="text-muted mb-0">Agora os livros possuem relacionamento com categorias.</p>
+                <span class="badge badge-soft mb-3">Catálogo Premium</span>
+                <h1 class="display-5 fw-bold mb-2">Livros cadastrados com visual moderno.</h1>
+                <p class="text-muted mb-0">Gerencie obras, categorias, autores, capas e valores em uma experiência mais elegante.</p>
             </div>
 
-            <a href="<%= request.getContextPath() %>/livros/novo" class="btn btn-primary btn-rounded px-4">
-                <i class="bi bi-plus-lg"></i>
-                Novo Livro
-            </a>
+            <div class="text-lg-end">
+                <div class="metric-value mb-2"><%= totalLivros != null ? totalLivros : 0 %></div>
+                <p class="text-muted mb-3">livros no catálogo</p>
+                <a href="<%= request.getContextPath() %>/livros/novo" class="btn btn-primary btn-rounded px-4">
+                    <i class="bi bi-plus-lg"></i>
+                    Novo Livro
+                </a>
+            </div>
         </div>
     </section>
 
@@ -106,14 +72,53 @@
         </div>
     <% } %>
 
-    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
-        <input id="buscaInstantanea" type="text" class="form-control" style="max-width: 420px;"
+    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-4">
+        <input id="buscaInstantanea" type="text" class="form-control" style="max-width: 460px;"
                placeholder="Buscar livro por nome, ISBN, autor ou categoria...">
 
-        <span class="badge text-bg-dark fs-6 px-3 py-2">
+        <span class="badge text-bg-primary fs-6 px-3 py-2">
             <%= livros != null ? livros.size() : 0 %> resultado(s)
         </span>
     </div>
+
+    <section class="catalog-grid mb-4">
+        <% if (livros != null && !livros.isEmpty()) { %>
+            <% for (Livro livro : livros) {
+                String capa = livro.getCapaLivro() != null && !livro.getCapaLivro().isBlank()
+                        ? livro.getCapaLivro()
+                        : "https://placehold.co/360x520/1e293b/f59e0b?text=CL+Book%27s";
+            %>
+                <article class="book-card item-busca">
+                    <div class="book-cover-large">
+                        <img src="<%= capa %>" alt="Capa de <%= livro.getNomeLivro() %>"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                        <div class="book-cover-fallback"><i class="bi bi-book-half"></i></div>
+                    </div>
+
+                    <div class="book-content">
+                        <span class="book-category"><%= livro.getNomeCategoria() != null ? livro.getNomeCategoria() : "Sem categoria" %></span>
+                        <h3 class="mt-3 mb-1"><%= livro.getNomeLivro() %></h3>
+                        <p class="text-muted mb-2"><%= livro.getAutor() %></p>
+                        <small class="text-muted d-block mb-3">ISBN: <%= livro.getIsbn() %></small>
+
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <div class="book-price">R$ <%= livro.getValorLivro() %></div>
+
+                            <div class="action-buttons">
+                                <a class="btn btn-sm btn-outline-light" href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>"
+                                   onclick="return confirm('Deseja realmente excluir este livro?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            <% } %>
+        <% } %>
+    </section>
 
     <section class="card table-card">
         <div class="card-body p-0">
@@ -122,7 +127,6 @@
                     <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Capa</th>
                         <th>Livro</th>
                         <th>Categoria</th>
                         <th>Autor</th>
@@ -133,53 +137,23 @@
                     <tbody>
                     <% if (livros == null || livros.isEmpty()) { %>
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-4">Nenhum livro cadastrado.</td>
+                            <td colspan="6" class="text-center text-muted py-4">Nenhum livro cadastrado.</td>
                         </tr>
                     <% } else { %>
-                        <% for (Livro livro : livros) {
-                            String capa = livro.getCapaLivro() != null && !livro.getCapaLivro().isBlank()
-                                    ? livro.getCapaLivro()
-                                    : "https://placehold.co/80x110/4f46e5/ffffff?text=Livro";
-                        %>
-                            <tr>
+                        <% for (Livro livro : livros) { %>
+                            <tr class="item-busca">
                                 <td><%= livro.getId() %></td>
-
                                 <td>
-                                    <img src="<%= capa %>"
-                                         alt="Capa"
-                                         class="rounded-3 shadow-sm"
-                                         style="width: 60px; height: 85px; object-fit: cover;"
-                                         onerror="this.src='https://placehold.co/80x110/4f46e5/ffffff?text=Livro'">
+                                    <div class="fw-semibold"><%= livro.getNomeLivro() %></div>
+                                    <small class="text-muted">ISBN: <%= livro.getIsbn() %></small>
                                 </td>
-
-                                <td>
-                                    <div>
-                                        <div class="fw-semibold"><%= livro.getNomeLivro() %></div>
-                                        <small class="text-muted">ISBN: <%= livro.getIsbn() %></small>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="badge text-bg-primary">
-                                        <%= livro.getNomeCategoria() != null ? livro.getNomeCategoria() : "Sem categoria" %>
-                                    </span>
-                                </td>
-
+                                <td><span class="badge text-bg-primary"><%= livro.getNomeCategoria() != null ? livro.getNomeCategoria() : "Sem categoria" %></span></td>
                                 <td><%= livro.getAutor() %></td>
                                 <td>R$ <%= livro.getValorLivro() %></td>
-
                                 <td>
                                     <div class="action-buttons justify-content-end">
-                                        <a class="btn btn-sm btn-outline-primary"
-                                           href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <a class="btn btn-sm btn-outline-danger"
-                                           href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>"
-                                           onclick="return confirm('Deseja realmente excluir este livro?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <a class="btn btn-sm btn-outline-primary" href="<%= request.getContextPath() %>/livros/editar?id=<%= livro.getId() %>"><i class="bi bi-pencil"></i></a>
+                                        <a class="btn btn-sm btn-outline-danger" href="<%= request.getContextPath() %>/livros/excluir?id=<%= livro.getId() %>" onclick="return confirm('Deseja realmente excluir este livro?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -187,16 +161,6 @@
                     <% } %>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="p-3 border-top d-flex justify-content-center">
-                <nav>
-                    <ul class="pagination mb-0">
-                        <li class="page-item disabled"><a class="page-link">Anterior</a></li>
-                        <li class="page-item active"><a class="page-link">1</a></li>
-                        <li class="page-item disabled"><a class="page-link">Próximo</a></li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </section>
