@@ -9,15 +9,17 @@
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav mx-auto gap-lg-3">
+            <ul class="navbar-nav mx-auto gap-lg-2">
                 <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/dashboard">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/livros">Catálogo</a></li>
+                <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/livros">Livros</a></li>
+                <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/categorias">Categorias</a></li>
                 <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/usuarios">Pessoas</a></li>
                 <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/estados">Estados</a></li>
                 <li class="nav-item"><a class="nav-link" href="<%= request.getContextPath() %>/emprestimos">Empréstimos</a></li>
             </ul>
 
-            <div class="d-flex gap-2 align-items-center mt-3 mt-lg-0">
+            <div class="d-flex gap-2 align-items-center mt-3 mt-lg-0 flex-wrap">
+                <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/categorias/novo">Nova Categoria</a>
                 <a class="btn btn-sm btn-outline-light btn-rounded" href="<%= request.getContextPath() %>/usuarios/novo">Nova Pessoa</a>
                 <a class="btn btn-sm btn-primary btn-rounded" href="<%= request.getContextPath() %>/livros/novo">Novo Livro</a>
             </div>
