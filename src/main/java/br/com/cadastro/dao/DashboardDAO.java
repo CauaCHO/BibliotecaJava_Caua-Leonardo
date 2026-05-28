@@ -1,6 +1,6 @@
 package br.com.cadastro.dao;
 
-import br.com.cadastro.util.ConnectionFactory;
+import br.com.cadastro.util.Conexao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class DashboardDAO {
 
     private Integer contar(String sql) {
         try (
-                Connection connection = ConnectionFactory.getConnection();
+                Connection connection = Conexao.getConexao();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet resultSet = statement.executeQuery()
         ) {
