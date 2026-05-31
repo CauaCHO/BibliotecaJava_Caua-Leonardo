@@ -1,6 +1,8 @@
 package br.com.cadastro.servlet;
 
 import br.com.cadastro.dao.EmprestimoDAO;
+import br.com.cadastro.dao.LivroDAO;
+import br.com.cadastro.dao.UsuarioDAO;
 import br.com.cadastro.model.Emprestimo;
 
 import javax.servlet.ServletException;
@@ -16,11 +18,14 @@ import java.time.LocalDate;
 public class EmprestimoServlet extends HttpServlet {
 
     private final EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final LivroDAO livroDAO = new LivroDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        carregarDadosTela(request);
         request.getRequestDispatcher("/emprestimos.jsp").forward(request, response);
     }
 
@@ -28,16 +33,31 @@ public class EmprestimoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Emprestimo emprestimo = new Emprestimo();
+        request.setCharacterEncoding("UTF-8");
 
-        emprestimo.setUsuarioId(Integer.parseInt(request.getParameter("usuarioId")));
-        emprestimo.setLivroId(Integer.parseInt(request.getParameter("livroId")));
-        emprestimo.setDataDevolucaoPrevista(LocalDate.parse(request.getParameter("dataDevolucao")));
-        emprestimo.setStatus("ATIVO");
-        emprestimo.setRenovacoesRestantes(2);
+        try {
+            Emprestimo emprestimo = new Emprestimo();
 
-        emprestimoDAO.cadastrar(emprestimo);
+            emprestimo.setUsuarioId(Integer.parseInt(request.getParameter("usuarioId")));
+            emprestimo.setLivroId(Integer.parseInt(request.getParameter("livroId")));
+            emprestimo.setDataDevolucaoPrevista(LocalDate.parse(request.getParameter("dataDevolucao")));
+            emprestimo.setStatus("ATIVO");
+            emprestimo.setRenovacoesRestantes(2);
 
-        response.sendRedirect(request.getContextPath() + "/emprestimos");
+            emprestimoDAO.cadastrar(emprestimo);
+            request.getSession().setAttribute("mensagemSucesso", "Empréstimo registrado com sucesso!");
+
+            response.sendRedirect(request.getContextPath() + "/emprestimos");
+        } catch (Exception e) {
+            request.setAttribute("mensagemErro", e.getMessage());
+            carregarDadosTela(request);
+            request.getRequestDispatcher("/emprestimos.jsp").forward(request, response);
+        }
+    }
+
+    private void carregarDadosTela(HttpServletRequest request) {
+        request.setAttribute("usuarios", usuarioDAO.listarTodos());
+        request.setAttribute("livros", livroDAO.listarTodos());
+        request.setAttribute("emprestimos", emprestimoDAO.listar());
     }
 }
